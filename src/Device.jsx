@@ -1,64 +1,111 @@
-// import { useState } from 'react';
-import Input from './Input'
+import { useState } from 'react';
+import DeviceOptions from './DeviceOptions';
+import TextInput from './TextInput';
 
-export function Device({ id, type, name, status, params }) {
-    let options = null;
+function Device({ id, type, initDevice, updateDevice }) {
+    const [name, setName] = useState(initDevice.name);
+    const [status, setStatus] = useState(initDevice.status);
+    const [params, setParams] = useState({...initDevice.parameters});
+    let statusInput = null;
+
+    function handleStatusChange(device) {
+        updateDevice(device);
+    }
+
     switch (type) {
-        case 'water_heater':
-            options = (
-                <>
-                    Temperature: {params.temperature}
-                    {' '}
-                    Target temperature: {params.target_temperature}
-                    {' '}
-                    <button>
-                        Edit
-                    </button>
-                    {' '}
-                    <label>
-                        <input
-                            type='checkbox'
-                            checked={params.timer_enabled}
-                        />
-                        Timer enabled
-                    </label>
-                    {' Start time '}
-                     
-                    <Input
-                        type='text'
-                        initValue={params.scheduled_on}
-                        onSave={() => null}
+        case 'curtain':
+            statusInput = (
+                <label>
+                    <input 
+                        type='checkbox'
+                        checked={status === 'open'}
+                        onChange={() => {
+                            let nextStatus = status === 'open' ? 'closed' : 'open';
+                            setStatus(nextStatus);
+                            let newDevice = {
+                                id: id,
+                                type: type,
+                                name: name,
+                                status: nextStatus,
+                                params: params
+                            };
+                            handleStatusChange(newDevice);
+                        }}
                     />
-                    {' Stop time '}
-                    <Input
-                        type='text'
-                        initValue={params.scheduled_off}
-                        onSave={() => null}
-                    />                    
-                </>
+                    Open
+                </label>
+            );
+            break;
+        case 'door_lock':
+            statusInput = (
+                <label>
+                    <input 
+                        type='checkbox'
+                        checked={status === 'locked'}
+                        onChange={() => {
+                            let nextStatus = status === 'open' ? 'locked' : 'open';
+                            setStatus(nextStatus);
+                            let newDevice = {
+                                id: id,
+                                type: type,
+                                name: name,
+                                status: nextStatus,
+                                params: params
+                            };
+                            handleStatusChange(newDevice);
+                        }}
+                    />
+                    Locked
+                </label>
             );
             break;
         default:
+            statusInput = (
+                <label>
+                    <input 
+                        type='checkbox'
+                        checked={status === 'on'}
+                    />
+                    On/Off
+                </label>
+            );
             break;
     }
     return (
         <div id={id}>
+            <TextInput
+                initValue={name}
+                onSave={(newName) => {
+                    setName(newName);
+                    updateDevice({
+                        id: id,
+                        type: type,
+                        name: newName,
+                        status: status,
+                        params: params
+                    });
+                }}
+            /> {' '}
+            {statusInput} {' '}
             <button>
                 Remove
             </button>
-            {' ' + name + ' '}
-            <label>
-                <input 
-                    type='checkbox'
-                    checked={status === 'on'}
-                />
-                On/Off
-            </label>
-            {' '}
-            {options}
+            <DeviceOptions
+                type={type}
+                options={params}
+                onSave={(newParams) => {
+                    setParams({...newParams});
+                    updateDevice({
+                        id: id,
+                        type: type,
+                        name: name,
+                        status: status,
+                        params: {...newParams}
+                    });
+                }}
+            />
         </div>
-
-    )
+    );
 }
 
 export default Device;

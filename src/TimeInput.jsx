@@ -1,6 +1,6 @@
 import {useState} from 'react';
 
-export function Input({ type, initValue, onSave }) {
+function TimeInput({ initValue, onSave }) {
     const [value, setValue] = useState(initValue);
     const [editing, setEditing] = useState(false);
 
@@ -8,10 +8,24 @@ export function Input({ type, initValue, onSave }) {
         setValue(e.target.value);
     }
 
+    function verifyValue(text) {
+        let regex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
+        if (text === null) {
+            return false;
+        }
+        return regex.test(text);
+    }
+
     function handleButtonClick() {
-        setEditing(!editing);
-        if (!editing) {
-            onSave();
+        if (editing) {
+            if (verifyValue(value)) {
+                setEditing(false);
+                onSave(value);
+            } else {
+                alert('Must enter a valid 24h time');
+            }
+        } else {
+            setEditing(true);
         }
     }
 
@@ -19,7 +33,7 @@ export function Input({ type, initValue, onSave }) {
         <>
             { editing &&
                 <input
-                    type={type}
+                    type='text'
                     value={value}
                     onChange={handleChange}
                 />
@@ -30,8 +44,7 @@ export function Input({ type, initValue, onSave }) {
                 { editing ? 'Save' : 'Edit' }
             </button>
         </>
-    )
-    
+    )    
 }
 
-export default Input;
+export default TimeInput;
