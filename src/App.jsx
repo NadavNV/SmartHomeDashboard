@@ -4,7 +4,7 @@ import DeviceList from './DeviceList';
 function App() {
   const [status, setStatus] = useState('init');
   const [devices, setDevices] = useState([]);
-
+  
   function handleFileSelected (e) {
       let fr = new FileReader();
       fr.onload = () => {
@@ -19,7 +19,7 @@ function App() {
     <>
       { status === 'init' && <h1>Initializing</h1> }
       { status === 'init' && <input type='file' onChange={handleFileSelected}/> }
-      { status === 'ready' && <DeviceList data={devices}/> }
+      { status === 'ready' && <DeviceList initData={devices}/> }
     </>    
   );
 }
