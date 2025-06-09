@@ -1,27 +1,19 @@
-import { useState } from 'react';
-import DeviceList from './DeviceList';
+import DeviceList from "./components/DeviceList";
+import { useDevices } from "./services/queries";
 
 function App() {
-  const [status, setStatus] = useState('init');
-  const [devices, setDevices] = useState([]);
-  
-  function handleFileSelected (e) {
-      let fr = new FileReader();
-      fr.onload = () => {
-          let data = JSON.parse(fr.result);
-          setDevices([...data]);
-          setStatus('ready');
-      };
-      fr.readAsText(e.target.files[0]);
+  const devicesQuery = useDevices();
+
+  if (devicesQuery.isPending) {
+    return <h1>Loading...</h1>;
   }
 
-  return (
-    <>
-      { status === 'init' && <h1>Initializing</h1> }
-      { status === 'init' && <input type='file' onChange={handleFileSelected}/> }
-      { status === 'ready' && <DeviceList initData={devices}/> }
-    </>    
-  );
+  if (devicesQuery.isError) {
+    console.log(devicesQuery.error);
+    return <h1>An error occurred</h1>;
+  }
+
+  return <DeviceList />;
 }
 
 export default App;

@@ -2,7 +2,15 @@ import { useState } from "react";
 import DeviceOptions from "./DeviceOptions";
 import TextInput from "./TextInput";
 
-function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
+function Device({
+  id,
+  type,
+  initDevice,
+  updateDevice,
+  removeDevice,
+  deviceAction,
+  disabled,
+}) {
   const [name, setName] = useState(initDevice.name);
   const [status, setStatus] = useState(initDevice.status);
   const [params, setParams] = useState({ ...initDevice.parameters });
@@ -14,7 +22,7 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
       type: type,
       name: name,
       status: nextStatus,
-      params: params,
+      parameters: params,
     };
     updateDevice(newDevice);
   }
@@ -37,7 +45,7 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
               setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
-            disabled={!enabled}
+            disabled={disabled}
           />
           Open
         </label>
@@ -54,7 +62,7 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
               setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
-            disabled={!enabled}
+            disabled={disabled}
           />
           Locked
         </label>
@@ -71,7 +79,7 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
               setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
-            disabled={!enabled}
+            disabled={disabled}
           />
           On/Off
         </label>
@@ -92,10 +100,10 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
             params: params,
           });
         }}
-        disabled={!enabled}
+        disabled={disabled}
       />{" "}
       {statusInput}{" "}
-      <button disabled={!enabled} onClick={handleRemoveDevice}>
+      <button disabled={disabled} onClick={handleRemoveDevice}>
         Remove
       </button>
       <DeviceOptions
@@ -103,15 +111,15 @@ function Device({ id, type, initDevice, updateDevice, removeDevice, enabled }) {
         options={params}
         onSave={(newParams) => {
           setParams({ ...newParams });
-          updateDevice({
+          deviceAction({
             id: id,
             type: type,
             name: name,
             status: status,
-            params: { ...newParams },
+            parameters: { ...newParams },
           });
         }}
-        disabled={!enabled}
+        disabled={disabled}
       />
     </div>
   );

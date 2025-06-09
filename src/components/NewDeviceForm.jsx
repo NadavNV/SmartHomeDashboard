@@ -4,7 +4,7 @@ import NumberInput from "./NumberInput";
 import TimeInput from "./TimeInput";
 import Select from "./Select";
 
-export default function NewDeviceForm({ addDevice, verifyId }) {
+export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [type, setType] = useState("");
@@ -389,7 +389,9 @@ export default function NewDeviceForm({ addDevice, verifyId }) {
         </ul>
       )}
       <br />
-      <button onClick={handleSubmit}>Submit</button>
+      <button onClick={handleSubmit} disabled={disabled}>
+        Submit
+      </button>
     </div>
   );
 }
