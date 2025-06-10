@@ -97,7 +97,7 @@ function Device({
             type: type,
             name: newName,
             status: status,
-            params: params,
+            parameters: params,
           });
         }}
         disabled={disabled}

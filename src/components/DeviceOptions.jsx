@@ -106,7 +106,7 @@ function DeviceOptions({ type, options, onSave, disabled }) {
         <ul>
           <li>
             <label>
-              Temperature:
+              Temperature:{" "}
               <NumberInput
                 initValue={options.temperature}
                 onSave={(newTemperature) => {

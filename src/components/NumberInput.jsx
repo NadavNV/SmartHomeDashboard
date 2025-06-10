@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function NumberInput({
   initValue,
@@ -9,6 +9,13 @@ function NumberInput({
 }) {
   const [value, setValue] = useState(initValue);
   const [editing, setEditing] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
   function handleChange(e) {
     setValue(e.target.value);
@@ -41,6 +48,7 @@ function NumberInput({
     <>
       {editing && (
         <input
+          ref={inputRef}
           disabled={disabled}
           type="number"
           value={value}

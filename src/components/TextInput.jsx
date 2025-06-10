@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 function TextInput({ initValue, onSave, disabled }) {
   const [value, setValue] = useState(initValue);
   const [editing, setEditing] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if (editing) {
+      inputRef.current.focus();
+    }
+  }, [editing]);
 
   function handleChange(e) {
     setValue(e.target.value);
@@ -19,6 +26,7 @@ function TextInput({ initValue, onSave, disabled }) {
     <>
       {editing && (
         <input
+          ref={inputRef}
           disabled={disabled}
           type="text"
           value={value}
