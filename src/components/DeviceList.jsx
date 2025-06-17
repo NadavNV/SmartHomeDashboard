@@ -26,7 +26,7 @@ export default function DeviceList() {
   const devicesQuery = useDevices();
 
   // Whether or not to display the new device form
-  const [showForm, setShowForm] = useState(false); 
+  const [showForm, setShowForm] = useState(false);
   // Used for resetting the new device form after a new device is added
   const [formKey, setFormKey] = useState(Date.now().toString());
 
@@ -84,7 +84,7 @@ export default function DeviceList() {
   }, [isFetching, isMutating, restartAutoReload]);
 
   // Used to display when device information was last retrieved
-  const currentTime = Date.toLocaleTimeString('en-GB');
+  const currentTime = new Date().toLocaleTimeString("en-GB");
 
   // Convert device objects into React components
   const devices = (devicesQuery.data ?? []).map((device) => {
@@ -117,11 +117,10 @@ export default function DeviceList() {
   return (
     <div>
       {/* Status message */}
-      { (isFetching > 0 || isMutating > 0) && <h1>Updating...</h1> }
-      { 
-        (isFetching === 0 && isMutating === 0) &&
+      {(isFetching > 0 || isMutating > 0) && <h1>Updating...</h1>}
+      {isFetching === 0 && isMutating === 0 && (
         <h1>{`Data retrievd at ${currentTime}`}</h1>
-      }
+      )}
       <hr />
       {/* Devices list */}
       <ul>{devices}</ul>
@@ -147,7 +146,7 @@ export default function DeviceList() {
             createDeviceMutation.mutate(newDevice);
           }}
           verifyId={(newId) => {
-            // Disallow existing IDs 
+            // Disallow existing IDs
             for (const device of devicesQuery.data ?? []) {
               if (device.id === newId) {
                 return false;
