@@ -4,7 +4,7 @@ import { createDevice, deleteDevice, deviceAction, updateDevice } from "./api";
 // Our API sends errors with a JSON object containing an 'error' key
 // with an error message as its value. If the error is returned by our API
 // then we want to access that error message. Otherwise, some other error
-// occurred, so we access its message directly. 
+// occurred, so we access its message directly.
 function handleError(error) {
   if (typeof error.response === "object") {
     if (typeof error.response.data === "object") {
@@ -27,7 +27,7 @@ export function useCreateDevice(resetForm) {
     onSuccess: async () => {
       resetForm();
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["devices"] });
+      await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
     },
   });
 }
@@ -38,9 +38,13 @@ export function useUpdateDevice() {
   return useMutation({
     mutationFn: (device) => updateDevice(device),
     onError: (error) => handleError(error),
-    onSuccess: async () =>
+    onSuccess: async (data, variables) => {
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["devices"] }),
+      await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["device", variables.id],
+      });
+    },
   });
 }
 
@@ -52,7 +56,7 @@ export function useDeleteDevice() {
     onError: (error) => handleError(error),
     onSuccess: async () =>
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["devices"] }),
+      await queryClient.invalidateQueries({ queryKey: ["device_ids"] }),
   });
 }
 
@@ -62,8 +66,12 @@ export function useDeviceAction() {
   return useMutation({
     mutationFn: (device) => deviceAction(device),
     onError: (error) => handleError(error),
-    onSuccess: async () =>
+    onSuccess: async (data, variables) => {
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["devices"] }),
+      await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["device", variables.id],
+      });
+    },
   });
 }

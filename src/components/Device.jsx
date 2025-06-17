@@ -13,6 +13,7 @@ export default function Device({
   disabled, // Whether or not input fields should be disabled
 }) {
   const [name, setName] = useState(initDevice.name);
+  const [room, setRoom] = useState(initDevice.room);
   const [status, setStatus] = useState(initDevice.status);
   const [parameters, setParameters] = useState({ ...initDevice.parameters });
   // What components to display for the device status,
@@ -23,6 +24,7 @@ export default function Device({
     let newDevice = {
       id: id,
       type: type,
+      room: room,
       name: name,
       status: nextStatus,
       parameters: parameters,
@@ -100,6 +102,7 @@ export default function Device({
           updateDevice({
             id: id,
             type: type,
+            room: room,
             name: newName,
             status: status,
             parameters: parameters,
@@ -107,7 +110,25 @@ export default function Device({
         }}
         disabled={disabled}
       />{" "}
-      {statusInput}{" "}
+      {statusInput}
+      {" - "}
+      <label>
+        Room:{" "}
+        <TextInput
+          initValue={room}
+          onSave={(newRoom) => {
+            setRoom(newRoom);
+            updateDevice({
+              id: id,
+              type: type,
+              room: newRoom,
+              name: name,
+              status: status,
+              parameters: parameters,
+            });
+          }}
+        />
+      </label>{" "}
       <button disabled={disabled} onClick={handleRemoveDevice}>
         Remove
       </button>
@@ -119,6 +140,7 @@ export default function Device({
           deviceAction({
             id: id,
             type: type,
+            room: room,
             name: name,
             status: status,
             parameters: { ...newParameters },

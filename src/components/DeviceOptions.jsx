@@ -25,9 +25,9 @@ export default function DeviceOptions({
     case "water_heater":
       return (
         <ul>
+          <li>Temperature: {parameters.temperature}</li>
           <li>
-            Temperature: {parameters.temperature}
-            {" Target temperature: "}
+            Target temperature:{" "}
             <NumberInput
               initValue={parameters.target_temperature}
               min={MIN_WATER_TEMP}

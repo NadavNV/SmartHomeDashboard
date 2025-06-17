@@ -40,6 +40,7 @@ export default function NewDeviceForm({
 }) {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
+  const [room, setRoom] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [parameters, setParameters] = useState({});
@@ -146,6 +147,8 @@ export default function NewDeviceForm({
     } else if (verifyId(id)) {
       if (name === "") {
         alert("Must enter a name");
+      } else if (room === "") {
+        alert("Must enter a room name");
       } else if (type === "") {
         alert("Must choose a type");
       } else {
@@ -180,6 +183,16 @@ export default function NewDeviceForm({
           initValue={name}
           onSave={(newName) => {
             setName(newName);
+          }}
+          disabled={false}
+        />
+      </label>{" "}
+      <label>
+        Room:{" "}
+        <TextInput
+          initValue={room}
+          onSave={(newRoom) => {
+            setRoom(newRoom);
           }}
           disabled={false}
         />

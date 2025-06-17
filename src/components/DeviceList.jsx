@@ -4,15 +4,10 @@ import {
   useIsMutating,
   useQueryClient,
 } from "@tanstack/react-query";
-import Device from "./Device";
 import NewDeviceForm from "./NewDeviceForm";
-import { useDevices } from "../services/queries";
-import {
-  useCreateDevice,
-  useDeleteDevice,
-  useDeviceAction,
-  useUpdateDevice,
-} from "../services/mutations";
+import DeviceGroup from "./DeviceGroup";
+import { useDeviceIds, useDevices } from "../services/queries";
+import { useCreateDevice } from "../services/mutations";
 
 // The main component of the app.
 // Displays a status message at the top, below it a list of all device
@@ -22,13 +17,17 @@ import {
 // Device information is automatically reacquired after one minute
 // without any user actions.
 export default function DeviceList() {
-  // Query to fetch all device information from the server
-  const devicesQuery = useDevices();
+  // Query to fetch all device IDs from the server
+  const deviceIdsQuery = useDeviceIds();
+  // Query to fetch all device data based on their IDs
+  const devicesQuery = useDevices(deviceIdsQuery.data);
 
   // Whether or not to display the new device form
   const [showForm, setShowForm] = useState(false);
   // Used for resetting the new device form after a new device is added
   const [formKey, setFormKey] = useState(Date.now().toString());
+  // Group devices either by room or by type
+  const [groupBy, setGroupBy] = useState("type");
 
   // ID for the timeout used to refresh the data
   const timeoutId = useRef(null);
@@ -43,16 +42,16 @@ export default function DeviceList() {
     setFormKey(Date.now().toString());
     setShowForm(false);
   });
-  const deleteDeviceMutation = useDeleteDevice();
-  const updateDeviceMutation = useUpdateDevice();
-  const deviceActionMutation = useDeviceAction();
 
   const queryClient = useQueryClient();
 
   // Reload all device information
-  const handleReload = useCallback(() => {
-    queryClient.invalidateQueries({ queryKey: ["devices"] });
-  }, [queryClient]);
+  const handleReload = useCallback(async () => {
+    await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
+    for (const id of deviceIdsQuery.data) {
+      queryClient.invalidateQueries({ queryKey: ["device", id] });
+    }
+  }, [queryClient, deviceIdsQuery]);
 
   // Restart the timer until automatic reloading of device data
   const restartAutoReload = useCallback(() => {
@@ -86,46 +85,70 @@ export default function DeviceList() {
   // Used to display when device information was last retrieved
   const currentTime = new Date().toLocaleTimeString("en-GB");
 
-  // Convert device objects into React components
-  const devices = (devicesQuery.data ?? []).map((device) => {
-    return (
-      <li key={device.id}>
-        <Device
-          id={device.id}
-          type={device.type}
-          initDevice={{
-            name: device.name,
-            status: device.status,
-            parameters: { ...device.parameters },
-          }}
-          updateDevice={(updatedDevice) => {
-            updateDeviceMutation.mutate(updatedDevice);
-          }}
-          removeDevice={(idToDelete) => {
-            deleteDeviceMutation.mutate(idToDelete);
-          }}
-          deviceAction={(updatedDevice) => {
-            deviceActionMutation.mutate(updatedDevice);
-          }}
-          // Disable input fields while there are pending requests
-          disabled={isFetching > 0 || isMutating > 0}
+  const devices = devicesQuery.data.filter((result) => result !== undefined);
+
+  let groups = {};
+  switch (groupBy) {
+    case "type":
+      groups = Object.groupBy(devices ?? [], (device) => device.type ?? null);
+      break;
+    case "room":
+      groups = Object.groupBy(devices ?? [], (device) => device.room ?? null);
+      break;
+    default:
+      return <h1>Error: Unknown groupBy</h1>;
+  }
+
+  // Convert a string made up of words separated by either spaces or underscores
+  // into a string in title format, i.e. capitalize the first letter of every
+  // word and the rest are lowercase.
+  function capitalize(string) {
+    string = string.replace(/_/, () => " ");
+    return string
+      .split(" ")
+      .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  }
+
+  let deviceGroups = [];
+  for (const label in groups ?? {}) {
+    if (label !== null) {
+      deviceGroups.push(
+        <DeviceGroup
+          key={label}
+          label={capitalize(label)}
+          deviceList={groups[label]}
         />
-      </li>
-    );
-  });
+      );
+    }
+  }
 
   return (
-    <div>
+    <div
+      style={{
+        display: "block",
+        marginLeft: "auto",
+        marginRight: "auto",
+        width: "fit-content",
+      }}
+    >
       {/* Status message */}
-      {(isFetching > 0 || isMutating > 0) && <h1>Updating...</h1>}
+      {(isFetching > 0 || isMutating > 0) && <h1>Loading...</h1>}
       {isFetching === 0 && isMutating === 0 && (
         <h1>{`Data retrievd at ${currentTime}`}</h1>
       )}
       <hr />
-      {/* Devices list */}
-      <ul>{devices}</ul>
+      {/* Device groups list */}
+      <ul>{deviceGroups}</ul>
       <hr />
       {/* Buttons */}
+      <button
+        onClick={() => {
+          setGroupBy(groupBy === "room" ? "type" : "room");
+        }}
+      >
+        {groupBy === "room" ? "Group by type" : "Group by room"}
+      </button>{" "}
       <button
         onClick={() => {
           if (!showForm) {
