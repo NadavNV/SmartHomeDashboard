@@ -3,16 +3,54 @@ import TextInput from "./TextInput";
 import NumberInput from "./NumberInput";
 import TimeInput from "./TimeInput";
 import Select from "./Select";
+import {
+  DEFAULT_AC_FAN,
+  DEFAULT_AC_MODE,
+  DEFAULT_AC_SWING,
+  DEFAULT_AC_TEMP,
+  DEFAULT_AUTO_LOCK_ENABLED,
+  DEFAULT_BATTERY,
+  DEFAULT_BRIGHTNESS,
+  DEFAULT_DIMMABLE,
+  DEFAULT_DYNAMIC_COLOR,
+  DEFAULT_LIGHT_COLOR,
+  DEFAULT_POSITION,
+  DEFAULT_START_TIME,
+  DEFAULT_STOP_TIME,
+  DEFAULT_TIMER_ENABLED,
+  DEFAULT_WATER_TEMP,
+  MIN_AC_TEMP,
+  MAX_AC_TEMP,
+  MIN_WATER_TEMP,
+  MAX_WATER_TEMP,
+  MIN_BRIGHTNESS,
+  MAX_BRIGHTNESS,
+} from "../constants";
 
-export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
+// Form for creating a new smart home device. Adjusts based on the type selected
+export default function NewDeviceForm({
+  // Function for adding a new device. Recieves the new device information,
+  // as an object, as its only argument.
+  addDevice,
+  // Function for verifying that the new ID is unique. Recieves the new
+  // ID as its only argument.
+  verifyId,
+  // Whether or not to disabled the save button.
+  disabled,
+}) {
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [status, setStatus] = useState("");
   const [parameters, setParameters] = useState({});
 
+  // Since the parameters object may include fields from different device types
+  // before the new device is saved, this function makes sure it only includes
+  // the fields relevant to the currently selected type. It also ensures that
+  // all relevant fields are indeed included.
   function cleanParameters() {
     const newParameters = { ...parameters };
+    // Which fields to keep
     let allowedKeys = [];
     switch (type) {
       case "water_heater":
@@ -24,74 +62,75 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
           "scheduled_off",
         ];
         if (newParameters.temperature === undefined) {
-          newParameters.temperature = 60;
+          newParameters.temperature = DEFAULT_WATER_TEMP;
         }
         if (newParameters.target_temperature === undefined) {
-          newParameters.target_temperature = 60;
+          newParameters.target_temperature = DEFAULT_WATER_TEMP;
         }
         if (newParameters.timer_enabled === undefined) {
-          newParameters.timer_enabled = false;
+          newParameters.timer_enabled = DEFAULT_TIMER_ENABLED;
         }
         if (newParameters.timer_enabled) {
           if (newParameters.scheduled_on === undefined) {
-            newParameters.scheduled_on = "06:30";
+            newParameters.scheduled_on = DEFAULT_START_TIME;
           }
           if (newParameters.scheduled_off === undefined) {
-            newParameters.scheduled_off = "08:00";
+            newParameters.scheduled_off = DEFAULT_STOP_TIME;
           }
         }
         break;
       case "light":
         allowedKeys = ["brightness", "color", "is_dimmable", "dynamic_color"];
         if (newParameters.is_dimmable === undefined) {
-          newParameters.is_dimmable = false;
+          newParameters.is_dimmable = DEFAULT_DIMMABLE;
         }
         if (newParameters.is_dimmable) {
           if (newParameters.brightness === undefined) {
-            newParameters.brightness = 0;
+            newParameters.brightness = DEFAULT_BRIGHTNESS;
           }
         }
         if (newParameters.dynamic_color === undefined) {
-          newParameters.dynamic_color = false;
+          newParameters.dynamic_color = DEFAULT_DYNAMIC_COLOR;
         }
         if (newParameters.dynamic_color) {
           if (newParameters.color === undefined) {
-            newParameters.color = "#FFFFFF";
+            newParameters.color = DEFAULT_LIGHT_COLOR;
           }
         }
         break;
       case "door_lock":
         allowedKeys = ["auto_lock_enabled", "battery_level"];
         if (newParameters.auto_lock_enabled === undefined) {
-          newParameters.auto_lock_enabled = false;
+          newParameters.auto_lock_enabled = DEFAULT_AUTO_LOCK_ENABLED;
         }
         if (newParameters.auto_lock_enabled) {
-          newParameters.battery_level = 100;
+          newParameters.battery_level = DEFAULT_BATTERY;
         }
         break;
       case "curtain":
         allowedKeys = ["position"];
-        newParameters.position = 100;
+        newParameters.position = DEFAULT_POSITION;
         break;
       case "air_conditioner":
         allowedKeys = ["temperature", "mode", "fan_speed", "swing"];
         if (newParameters.temperature === undefined) {
-          newParameters.temperature = 24;
+          newParameters.temperature = DEFAULT_AC_TEMP;
         }
         if (newParameters.mode === undefined) {
-          newParameters.mode = "cool";
+          newParameters.mode = DEFAULT_AC_MODE;
         }
         if (newParameters.fan_speed === undefined) {
-          newParameters.fan_speed = "low";
+          newParameters.fan_speed = DEFAULT_AC_FAN;
         }
         if (newParameters.swing === undefined) {
-          newParameters.swing = "off";
+          newParameters.swing = DEFAULT_AC_SWING;
         }
         break;
       default:
         console.log(`Unknown type: ${type}`);
     }
 
+    // Remove unnecessary fields
     const filtered = Object.keys(newParameters)
       .filter((key) => allowedKeys.includes(key))
       .reduce((obj, key) => {
@@ -159,6 +198,7 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
           value={type}
           onChange={(newType) => {
             setType(newType);
+            // Set the status based on the selected type
             switch (newType) {
               case "curtain":
               case "door_lock":
@@ -178,7 +218,9 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
             <label>
               Target temperature:{" "}
               <NumberInput
-                initValue={""}
+                initValue={DEFAULT_WATER_TEMP}
+                min={MIN_WATER_TEMP}
+                max={MAX_WATER_TEMP}
                 onSave={(newTemperature) => {
                   setParameters({
                     ...parameters,
@@ -194,36 +236,38 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
               Timer enabled:
               <input
                 type="checkbox"
-                checked={parameters.timer_enabled ?? false}
+                checked={parameters.timer_enabled ?? DEFAULT_TIMER_ENABLED}
                 onChange={() => {
                   setParameters({
                     ...parameters,
-                    timer_enabled: !(parameters.timer_enabled ?? false),
+                    timer_enabled: !(
+                      parameters.timer_enabled ?? DEFAULT_TIMER_ENABLED
+                    ),
                   });
                 }}
               />
             </label>
             {" Start time: "}
             <TimeInput
-              initValue={parameters.scheduled_on ?? ""}
+              initValue={parameters.scheduled_on ?? DEFAULT_START_TIME}
               onSave={(newTime) => {
                 setParameters({
                   ...parameters,
                   scheduled_on: newTime,
                 });
               }}
-              disabled={!(parameters.timer_enabled ?? false)}
+              disabled={!(parameters.timer_enabled ?? DEFAULT_TIMER_ENABLED)}
             />
             {" Stop time: "}
             <TimeInput
-              initValue={parameters.scheduled_off ?? ""}
+              initValue={parameters.scheduled_off ?? DEFAULT_STOP_TIME}
               onSave={(newTime) => {
                 setParameters({
                   ...parameters,
                   scheduled_off: newTime,
                 });
               }}
-              disabled={!(parameters.timer_enabled ?? false)}
+              disabled={!(parameters.timer_enabled ?? DEFAULT_TIMER_ENABLED)}
             />
           </li>
         </ul>
@@ -235,16 +279,18 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
               Dynamic color:
               <input
                 type="checkbox"
-                checked={parameters.dynamic_color ?? false}
+                checked={parameters.dynamic_color ?? DEFAULT_DYNAMIC_COLOR}
                 onChange={() => {
                   setParameters({
                     ...parameters,
-                    dynamic_color: !(parameters.dynamic_color ?? false),
+                    dynamic_color: !(
+                      parameters.dynamic_color ?? DEFAULT_DYNAMIC_COLOR
+                    ),
                   });
                 }}
               />
             </label>
-            {(parameters.dynamic_color ?? false) && (
+            {(parameters.dynamic_color ?? DEFAULT_DYNAMIC_COLOR) && (
               <label>
                 {" "}
                 Color:{" "}
@@ -265,23 +311,23 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
               Is dimmable:
               <input
                 type="checkbox"
-                checked={parameters.is_dimmable ?? false}
+                checked={parameters.is_dimmable ?? DEFAULT_DIMMABLE}
                 onChange={() => {
                   setParameters({
                     ...parameters,
-                    is_dimmable: !(parameters.is_dimmable ?? false),
+                    is_dimmable: !(parameters.is_dimmable ?? DEFAULT_DIMMABLE),
                   });
                 }}
               />
             </label>
-            {(parameters.is_dimmable ?? false) && (
+            {(parameters.is_dimmable ?? DEFAULT_DIMMABLE) && (
               <label>
                 {" "}
                 Brightness:{" "}
                 <NumberInput
-                  initValue={0}
-                  min={0}
-                  max={100}
+                  initValue={DEFAULT_BRIGHTNESS}
+                  min={MIN_BRIGHTNESS}
+                  max={MAX_BRIGHTNESS}
                   onSave={(newBrightness) => {
                     setParameters({
                       ...parameters,
@@ -301,7 +347,9 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
             <label>
               Temperature:
               <NumberInput
-                initValue={24}
+                initValue={DEFAULT_AC_TEMP}
+                min={MIN_AC_TEMP}
+                max={MAX_AC_TEMP}
                 onSave={(newTemperature) => {
                   setParameters({
                     ...parameters,
@@ -320,7 +368,7 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
                 { label: "Heating", value: "heat" },
                 { label: "Fan", value: "fan" },
               ]}
-              value="cool"
+              value={DEFAULT_AC_MODE}
               onChange={(newMode) => {
                 setParameters({
                   ...parameters,
@@ -339,7 +387,7 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
                 { label: "Medium", value: "medium" },
                 { label: "High", value: "high" },
               ]}
-              value="low"
+              value={DEFAULT_AC_FAN}
               onChange={(newFanSpeed) => {
                 setParameters({
                   ...parameters,
@@ -357,7 +405,7 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
                 { label: "On", value: "on" },
                 { label: "Auto", value: "auto" },
               ]}
-              value="off"
+              value={DEFAULT_AC_SWING}
               onChange={(newSwing) => {
                 setParameters({
                   ...parameters,
@@ -376,7 +424,9 @@ export default function NewDeviceForm({ addDevice, verifyId, disabled }) {
               Auto-lock enabled:
               <input
                 type="checkbox"
-                checked={parameters.auto_lock_enabled ?? false}
+                checked={
+                  parameters.auto_lock_enabled ?? DEFAULT_AUTO_LOCK_ENABLED
+                }
                 onChange={(e) => {
                   setParameters({
                     ...parameters,

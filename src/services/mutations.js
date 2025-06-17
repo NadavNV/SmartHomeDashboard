@@ -1,6 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createDevice, deleteDevice, deviceAction, updateDevice } from "./api";
 
+// Our API sends errors with a JSON object containing an 'error' key
+// with an error message as its value. If the error is returned by our API
+// then we want to access that error message. Otherwise, some other error
+// occurred, so we access its message directly. 
 function handleError(error) {
   if (typeof error.response === "object") {
     if (typeof error.response.data === "object") {
@@ -11,14 +15,18 @@ function handleError(error) {
   alert(error.message);
 }
 
-export function useCreateDevice(onSuccess) {
+// When a new device is created successfully, the app needs to reset the new
+// device form. That is what the 'resetForm' function that is passed as an
+// argument to this mutation does.
+export function useCreateDevice(resetForm) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (device) => createDevice(device),
     onError: (error) => handleError(error),
     onSuccess: async () => {
-      onSuccess();
+      resetForm();
+      // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["devices"] });
     },
   });
@@ -31,6 +39,7 @@ export function useUpdateDevice() {
     mutationFn: (device) => updateDevice(device),
     onError: (error) => handleError(error),
     onSuccess: async () =>
+      // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["devices"] }),
   });
 }
@@ -42,6 +51,7 @@ export function useDeleteDevice() {
     mutationFn: (id) => deleteDevice(id),
     onError: (error) => handleError(error),
     onSuccess: async () =>
+      // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["devices"] }),
   });
 }
@@ -53,6 +63,7 @@ export function useDeviceAction() {
     mutationFn: (device) => deviceAction(device),
     onError: (error) => handleError(error),
     onSuccess: async () =>
+      // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["devices"] }),
   });
 }

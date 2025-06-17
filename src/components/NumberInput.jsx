@@ -1,16 +1,28 @@
 import { useState, useRef, useEffect } from "react";
 
-function NumberInput({
+// React component that either displays an numeric input field when in editing
+// mode or displays the current value as text when in non-editing mode.
+export default function NumberInput({
+  // Initial value
   initValue,
+  // Minimum allowed value
   min = -Infinity,
+  // Maximum allowed value
   max = Infinity,
+  // Function to be called when exiting editing mode, recieves the new value
+  // as its only argument
   onSave,
+  // Whether or not to disable interactivity
   disabled,
 }) {
+  // The current value
   const [value, setValue] = useState(initValue);
+  // Whether or not the component is in editing mode
   const [editing, setEditing] = useState(false);
+  // Points to the input component, used for focusing it when entering edit mode
   const inputRef = useRef(null);
 
+  // Focus the input component when entering edit mode
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
@@ -25,6 +37,7 @@ function NumberInput({
     return min <= number && number <= max;
   }
 
+  // Verify the current value and either enter or exit editing mode
   function handleButtonClick() {
     if (editing) {
       if (verifyValue(value)) {
@@ -62,5 +75,3 @@ function NumberInput({
     </>
   );
 }
-
-export default NumberInput;

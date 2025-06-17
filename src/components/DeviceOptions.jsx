@@ -1,20 +1,40 @@
 import TimeInput from "./TimeInput";
 import NumberInput from "./NumberInput";
 import Select from "./Select";
+import {
+  MIN_WATER_TEMP,
+  MAX_WATER_TEMP,
+  MIN_BRIGHTNESS,
+  MAX_BRIGHTNESS,
+  MIN_AC_TEMP,
+  MAX_AC_TEMP,
+} from "../constants";
 
-function DeviceOptions({ type, options, onSave, disabled }) {
+export default function DeviceOptions({
+  // e.g. water heater, light, etc.
+  type,
+  // Different device options, based on the type
+  parameters,
+  // Function to use when saving new device information.
+  // Recieves the new information, as an object, as its only argument
+  onSave,
+  // Whether or not to disabled input fields
+  disabled,
+}) {
   switch (type) {
     case "water_heater":
       return (
         <ul>
           <li>
-            Temperature: {options.temperature}
+            Temperature: {parameters.temperature}
             {" Target temperature: "}
             <NumberInput
-              initValue={options.target_temperature}
+              initValue={parameters.target_temperature}
+              min={MIN_WATER_TEMP}
+              max={MAX_WATER_TEMP}
               onSave={(newTemperature) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   target_temperature: newTemperature,
                 });
               }}
@@ -27,21 +47,21 @@ function DeviceOptions({ type, options, onSave, disabled }) {
               <input
                 disabled={disabled}
                 type="checkbox"
-                checked={options.timer_enabled}
+                checked={parameters.timer_enabled}
                 onChange={() => {
                   onSave({
-                    ...options,
-                    timer_enabled: !options.timer_enabled,
+                    ...parameters,
+                    timer_enabled: !parameters.timer_enabled,
                   });
                 }}
               />
             </label>
             {" Start time: "}
             <TimeInput
-              initValue={options.scheduled_on}
+              initValue={parameters.scheduled_on}
               onSave={(newTime) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   scheduled_on: newTime,
                 });
               }}
@@ -49,10 +69,10 @@ function DeviceOptions({ type, options, onSave, disabled }) {
             />
             {" Stop time: "}
             <TimeInput
-              initValue={options.scheduled_off}
+              initValue={parameters.scheduled_off}
               onSave={(newTime) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   scheduled_off: newTime,
                 });
               }}
@@ -64,16 +84,16 @@ function DeviceOptions({ type, options, onSave, disabled }) {
     case "light":
       return (
         <ul>
-          {options.is_dimmable && (
+          {parameters.is_dimmable && (
             <li>
               Brightness:{" "}
               <NumberInput
-                initValue={options.brightness}
-                min={0}
-                max={100}
+                initValue={parameters.brightness}
+                min={MIN_BRIGHTNESS}
+                max={MAX_BRIGHTNESS}
                 onSave={(newBrightness) => {
                   onSave({
-                    ...options,
+                    ...parameters,
                     brightness: newBrightness,
                   });
                 }}
@@ -81,17 +101,20 @@ function DeviceOptions({ type, options, onSave, disabled }) {
               />
             </li>
           )}
-          {options.dynamic_color && (
+          {parameters.dynamic_color && (
             <li>
               <label>
                 Color:{" "}
                 <input
                   disabled={disabled}
                   type="color"
-                  defaultValue={options.color}
+                  defaultValue={parameters.color}
                   onBlur={(e) => {
+                    // Only save the information when the user closes the
+                    // color picker, otherwise there will be many unnecessary
+                    // update requests sent to the server.
                     onSave({
-                      ...options,
+                      ...parameters,
                       color: e.target.value,
                     });
                   }}
@@ -108,10 +131,12 @@ function DeviceOptions({ type, options, onSave, disabled }) {
             <label>
               Temperature:{" "}
               <NumberInput
-                initValue={options.temperature}
+                initValue={parameters.temperature}
+                min={MIN_AC_TEMP}
+                max={MAX_AC_TEMP}
                 onSave={(newTemperature) => {
                   onSave({
-                    ...options,
+                    ...parameters,
                     temperature: newTemperature,
                   });
                 }}
@@ -127,10 +152,10 @@ function DeviceOptions({ type, options, onSave, disabled }) {
                 { label: "Heating", value: "heat" },
                 { label: "Fan", value: "fan" },
               ]}
-              value={options.mode}
+              value={parameters.mode}
               onChange={(newMode) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   mode: newMode,
                 });
               }}
@@ -146,10 +171,10 @@ function DeviceOptions({ type, options, onSave, disabled }) {
                 { label: "Medium", value: "medium" },
                 { label: "High", value: "high" },
               ]}
-              value={options.fan_speed}
+              value={parameters.fan_speed}
               onChange={(newFanSpeed) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   fan_speed: newFanSpeed,
                 });
               }}
@@ -164,10 +189,10 @@ function DeviceOptions({ type, options, onSave, disabled }) {
                 { label: "On", value: "on" },
                 { label: "Auto", value: "auto" },
               ]}
-              value={options.swing}
+              value={parameters.swing}
               onChange={(newSwing) => {
                 onSave({
-                  ...options,
+                  ...parameters,
                   swing: newSwing,
                 });
               }}
@@ -185,23 +210,21 @@ function DeviceOptions({ type, options, onSave, disabled }) {
               <input
                 disabled={disabled}
                 type="checkbox"
-                checked={options.auto_lock_enabled}
+                checked={parameters.auto_lock_enabled}
                 readOnly={true}
               />
             </label>
           </li>
-          <li>{`Battery level: ${options.battery_level}`}</li>
+          <li>{`Battery level: ${parameters.battery_level}`}</li>
         </ul>
       );
     case "curtain":
       return (
         <ul>
-          <li>{`Position: ${options.position}`}</li>
+          <li>{`Position: ${parameters.position}`}</li>
         </ul>
       );
     default:
-      return null;
+      return <p>Unknown device type</p>;
   }
 }
-
-export default DeviceOptions;

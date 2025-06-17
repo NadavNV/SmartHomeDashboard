@@ -2,18 +2,21 @@ import { useState } from "react";
 import DeviceOptions from "./DeviceOptions";
 import TextInput from "./TextInput";
 
-function Device({
+// Displays the information of a single device, and allows editing it.
+export default function Device({
   id,
-  type,
-  initDevice,
-  updateDevice,
-  removeDevice,
-  deviceAction,
-  disabled,
+  type, // e.g. water heater, light, etc.
+  initDevice, // Initial data
+  updateDevice, // Function for updating device configuration
+  removeDevice, // Function for removing the device
+  deviceAction, // Function for applying an action on the device
+  disabled, // Whether or not input fields should be disabled
 }) {
   const [name, setName] = useState(initDevice.name);
   const [status, setStatus] = useState(initDevice.status);
-  const [params, setParams] = useState({ ...initDevice.parameters });
+  const [parameters, setParameters] = useState({ ...initDevice.parameters });
+  // What components to display for the device status,
+  // based on the device type.
   let statusInput = null;
 
   function handleStatusChange(nextStatus) {
@@ -22,7 +25,7 @@ function Device({
       type: type,
       name: name,
       status: nextStatus,
-      parameters: params,
+      parameters: parameters,
     };
     updateDevice(newDevice);
   }
@@ -33,6 +36,8 @@ function Device({
     }
   }
 
+  // What components to display for the device status,
+  // based on the device type.
   switch (type) {
     case "curtain":
       statusInput = (
@@ -97,7 +102,7 @@ function Device({
             type: type,
             name: newName,
             status: status,
-            parameters: params,
+            parameters: parameters,
           });
         }}
         disabled={disabled}
@@ -108,15 +113,15 @@ function Device({
       </button>
       <DeviceOptions
         type={type}
-        options={params}
-        onSave={(newParams) => {
-          setParams({ ...newParams });
+        parameters={parameters}
+        onSave={(newParameters) => {
+          setParameters({ ...newParameters });
           deviceAction({
             id: id,
             type: type,
             name: name,
             status: status,
-            parameters: { ...newParams },
+            parameters: { ...newParameters },
           });
         }}
         disabled={disabled}
@@ -124,5 +129,3 @@ function Device({
     </div>
   );
 }
-
-export default Device;
