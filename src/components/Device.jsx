@@ -1,4 +1,3 @@
-import { useState } from "react";
 import DeviceOptions from "./DeviceOptions";
 import TextInput from "./TextInput";
 
@@ -6,19 +5,27 @@ import TextInput from "./TextInput";
 export default function Device({
   id,
   type, // e.g. water heater, light, etc.
-  initDevice, // Initial data
+  name,
+  room,
+  status,
+  parameters,
   updateDevice, // Function for updating device configuration
   removeDevice, // Function for removing the device
   deviceAction, // Function for applying an action on the device
   disabled, // Whether or not input fields should be disabled
 }) {
-  const [name, setName] = useState(initDevice.name);
-  const [room, setRoom] = useState(initDevice.room);
-  const [status, setStatus] = useState(initDevice.status);
-  const [parameters, setParameters] = useState({ ...initDevice.parameters });
+  // const [name, setName] = useState(initDevice.name);
+  // const [room, setRoom] = useState(initDevice.room);
+  // const [status, setStatus] = useState(initDevice.status);
+  // const [parameters, setParameters] = useState({ ...initDevice.parameters });
   // What components to display for the device status,
   // based on the device type.
   let statusInput = null;
+
+  console.log(
+    `Rendering device: ID: ${id}, type: ${type}, name: ${name}, room: ${room},\
+     status: ${status}, parameters: ${parameters}`
+  );
 
   function handleStatusChange(nextStatus) {
     updateDevice({
@@ -46,7 +53,6 @@ export default function Device({
             checked={status === "open"}
             onChange={() => {
               let nextStatus = status === "open" ? "closed" : "open";
-              setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
             disabled={disabled}
@@ -63,7 +69,6 @@ export default function Device({
             checked={status === "locked"}
             onChange={() => {
               let nextStatus = status === "open" ? "locked" : "open";
-              setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
             disabled={disabled}
@@ -80,7 +85,6 @@ export default function Device({
             checked={status === "on"}
             onChange={() => {
               let nextStatus = status === "on" ? "off" : "on";
-              setStatus(nextStatus);
               handleStatusChange(nextStatus);
             }}
             disabled={disabled}
@@ -95,7 +99,6 @@ export default function Device({
       <TextInput
         initValue={name}
         onSave={(newName) => {
-          setName(newName);
           updateDevice({
             id: id,
             changes: {
@@ -112,7 +115,6 @@ export default function Device({
         <TextInput
           initValue={room}
           onSave={(newRoom) => {
-            setRoom(newRoom);
             updateDevice({
               id: id,
               changes: {
@@ -127,9 +129,8 @@ export default function Device({
       </button>
       <DeviceOptions
         type={type}
-        parameters={parameters}
+        parameters={{ ...parameters }}
         onSave={(newParameters) => {
-          setParameters({ ...parameters, ...newParameters });
           deviceAction({
             id: id,
             changes: { ...newParameters },

@@ -12,11 +12,9 @@ export default function TimeInput({
   // Whether or not to disable interactivity
   disabled,
 }) {
-  // The current value
-  const [value, setValue] = useState(initValue);
   // Whether or not the component is in editing mode
   const [editing, setEditing] = useState(false);
-  // Points to the input component, used for focusing it when entering edit mode
+  // Points to the input component
   const inputRef = useRef(null);
 
   // Focus the input component when entering edit mode
@@ -26,11 +24,9 @@ export default function TimeInput({
     }
   }, [editing]);
 
-  function handleChange(e) {
-    setValue(e.target.value);
-  }
-
   function verifyValue(text) {
+    // Regex explanation:
+    //
     // ([01]?\d|2[0-3]) - Hours. Either a 2 followed by 0-3 or an optional
     //                    initial digit of 0 or 1 follwed by any digit.
     // :? - Optional colon.
@@ -45,9 +41,9 @@ export default function TimeInput({
   // Verify the current value and either enter or exit editing mode
   function handleButtonClick() {
     if (editing) {
-      if (verifyValue(value)) {
+      if (verifyValue(inputRef.current.value)) {
         setEditing(false);
-        onSave(value);
+        onSave(inputRef.current.value);
       } else {
         alert("Must enter a valid 24h time");
       }
@@ -63,11 +59,11 @@ export default function TimeInput({
           ref={inputRef}
           disabled={disabled}
           type="text"
-          value={value}
-          onChange={handleChange}
+          defaultValue={initValue}
         />
       )}
-      {!editing && value}{" "}
+      {!editing &&
+        (inputRef.current === null ? initValue : inputRef.current.value)}{" "}
       <button disabled={disabled} onClick={handleButtonClick}>
         {editing ? "Save" : "Edit"}
       </button>

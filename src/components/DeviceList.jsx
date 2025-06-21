@@ -48,10 +48,8 @@ export default function DeviceList() {
   // Reload all device information
   const handleReload = useCallback(async () => {
     await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
-    for (const id of deviceIdsQuery.data) {
-      queryClient.invalidateQueries({ queryKey: ["device", id] });
-    }
-  }, [queryClient, deviceIdsQuery]);
+    await queryClient.invalidateQueries({ queryKey: ["device"] });
+  }, [queryClient]);
 
   // Restart the timer until automatic reloading of device data
   const restartAutoReload = useCallback(() => {

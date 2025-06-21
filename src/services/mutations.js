@@ -28,6 +28,7 @@ export function useCreateDevice(resetForm) {
       resetForm();
       // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
+      await queryClient.invalidateQueries({ queryKey: ["device"] });
     },
   });
 }
@@ -54,9 +55,12 @@ export function useDeleteDevice() {
   return useMutation({
     mutationFn: (id) => deleteDevice(id),
     onError: (error) => handleError(error),
-    onSuccess: async () =>
+    onSuccess: async () => {
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["device_ids"] }),
+      await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
+    },
+    onSettled: (data, variables) =>
+      queryClient.removeQueries({ queryKey: ["device", variables.id] }),
   });
 }
 
@@ -68,7 +72,6 @@ export function useDeviceAction() {
     onError: (error) => handleError(error),
     onSuccess: async (data, variables) => {
       // Fetch updated device data
-      await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
       await queryClient.invalidateQueries({
         queryKey: ["device", variables.id],
       });

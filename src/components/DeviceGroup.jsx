@@ -28,12 +28,10 @@ export default function DeviceGroup({
         <Device
           id={device.id}
           type={device.type}
-          initDevice={{
-            name: device.name,
-            status: device.status,
-            room: device.room,
-            parameters: { ...device.parameters },
-          }}
+          name={device.name}
+          status={device.status}
+          room={device.room}
+          parameters={{ ...device.parameters }}
           updateDevice={(update) => {
             updateDeviceMutation.mutate(update);
           }}

@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from "react";
 // React component that either displays an numeric input field when in editing
 // mode or displays the current value as text when in non-editing mode.
 export default function NumberInput({
-  // Initial value
+  // The initial value
   initValue,
   // Minimum allowed value
   min = -Infinity,
@@ -15,11 +15,9 @@ export default function NumberInput({
   // Whether or not to disable interactivity
   disabled,
 }) {
-  // The current value
-  const [value, setValue] = useState(initValue);
   // Whether or not the component is in editing mode
   const [editing, setEditing] = useState(false);
-  // Points to the input component, used for focusing it when entering edit mode
+  // Points to the input component
   const inputRef = useRef(null);
 
   // Focus the input component when entering edit mode
@@ -29,10 +27,6 @@ export default function NumberInput({
     }
   }, [editing]);
 
-  function handleChange(e) {
-    setValue(e.target.value);
-  }
-
   function verifyValue(number) {
     return min <= number && number <= max;
   }
@@ -40,9 +34,9 @@ export default function NumberInput({
   // Verify the current value and either enter or exit editing mode
   function handleButtonClick() {
     if (editing) {
-      if (verifyValue(value)) {
+      if (verifyValue(inputRef.current.value)) {
         setEditing(false);
-        onSave(value);
+        onSave(inputRef.current.value);
       } else {
         if (min !== -Infinity && max !== Infinity) {
           alert(`Must enter a nunmber between ${min} and ${max}`);
@@ -64,11 +58,11 @@ export default function NumberInput({
           ref={inputRef}
           disabled={disabled}
           type="number"
-          value={value}
-          onChange={handleChange}
+          defaultValue={initValue}
         />
       )}
-      {!editing && value}{" "}
+      {!editing &&
+        (inputRef.current === null ? initValue : inputRef.current.value)}{" "}
       <button disabled={disabled} onClick={handleButtonClick}>
         {editing ? "Save" : "Edit"}
       </button>

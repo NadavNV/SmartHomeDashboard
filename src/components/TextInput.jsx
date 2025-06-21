@@ -11,11 +11,9 @@ export default function TextInput({
   // Whether or not to disable interactivity
   disabled,
 }) {
-  // The current value
-  const [value, setValue] = useState(initValue);
   // Whether or not the component is in editing mode
   const [editing, setEditing] = useState(false);
-  // Points to the input component, used for focusing it when entering edit mode
+  // Points to the input component
   const inputRef = useRef(null);
 
   // Focus the input component when entering edit mode
@@ -25,15 +23,11 @@ export default function TextInput({
     }
   }, [editing]);
 
-  function handleChange(e) {
-    setValue(e.target.value);
-  }
-
   // Enter or exit editing mode
   function handleButtonClick() {
     setEditing(!editing);
     if (editing) {
-      onSave(value);
+      onSave(inputRef.current.value);
     }
   }
 
@@ -44,11 +38,11 @@ export default function TextInput({
           ref={inputRef}
           disabled={disabled}
           type="text"
-          value={value}
-          onChange={handleChange}
+          defaultValue={initValue}
         />
       )}
-      {!editing && value}{" "}
+      {!editing &&
+        (inputRef.current === null ? initValue : inputRef.current.value)}{" "}
       <button disabled={disabled} onClick={handleButtonClick}>
         {editing ? "Save" : "Edit"}
       </button>

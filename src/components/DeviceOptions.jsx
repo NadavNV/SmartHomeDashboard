@@ -21,6 +21,7 @@ export default function DeviceOptions({
   // Whether or not to disabled input fields
   disabled,
 }) {
+  console.log(`Rendering device options: ${JSON.stringify(parameters)}`);
   switch (type) {
     case "water_heater":
       return (
