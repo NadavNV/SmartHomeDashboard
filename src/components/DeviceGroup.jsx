@@ -34,14 +34,14 @@ export default function DeviceGroup({
             room: device.room,
             parameters: { ...device.parameters },
           }}
-          updateDevice={(updatedDevice) => {
-            updateDeviceMutation.mutate(updatedDevice);
+          updateDevice={(update) => {
+            updateDeviceMutation.mutate(update);
           }}
           removeDevice={(idToDelete) => {
             deleteDeviceMutation.mutate(idToDelete);
           }}
-          deviceAction={(updatedDevice) => {
-            deviceActionMutation.mutate(updatedDevice);
+          deviceAction={(action) => {
+            deviceActionMutation.mutate(action);
           }}
           // Disable input fields while there are pending requests
           disabled={isFetching > 0 || isMutating > 0}

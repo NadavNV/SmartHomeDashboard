@@ -34,7 +34,6 @@ export default function DeviceOptions({
               max={MAX_WATER_TEMP}
               onSave={(newTemperature) => {
                 onSave({
-                  ...parameters,
                   target_temperature: newTemperature,
                 });
               }}
@@ -50,7 +49,6 @@ export default function DeviceOptions({
                 checked={parameters.timer_enabled}
                 onChange={() => {
                   onSave({
-                    ...parameters,
                     timer_enabled: !parameters.timer_enabled,
                   });
                 }}
@@ -61,7 +59,6 @@ export default function DeviceOptions({
               initValue={parameters.scheduled_on}
               onSave={(newTime) => {
                 onSave({
-                  ...parameters,
                   scheduled_on: newTime,
                 });
               }}
@@ -72,7 +69,6 @@ export default function DeviceOptions({
               initValue={parameters.scheduled_off}
               onSave={(newTime) => {
                 onSave({
-                  ...parameters,
                   scheduled_off: newTime,
                 });
               }}
@@ -93,7 +89,6 @@ export default function DeviceOptions({
                 max={MAX_BRIGHTNESS}
                 onSave={(newBrightness) => {
                   onSave({
-                    ...parameters,
                     brightness: newBrightness,
                   });
                 }}
@@ -114,7 +109,6 @@ export default function DeviceOptions({
                     // color picker, otherwise there will be many unnecessary
                     // update requests sent to the server.
                     onSave({
-                      ...parameters,
                       color: e.target.value,
                     });
                   }}
@@ -136,7 +130,6 @@ export default function DeviceOptions({
                 max={MAX_AC_TEMP}
                 onSave={(newTemperature) => {
                   onSave({
-                    ...parameters,
                     temperature: newTemperature,
                   });
                 }}
@@ -155,7 +148,6 @@ export default function DeviceOptions({
               value={parameters.mode}
               onChange={(newMode) => {
                 onSave({
-                  ...parameters,
                   mode: newMode,
                 });
               }}
@@ -174,7 +166,6 @@ export default function DeviceOptions({
               value={parameters.fan_speed}
               onChange={(newFanSpeed) => {
                 onSave({
-                  ...parameters,
                   fan_speed: newFanSpeed,
                 });
               }}
@@ -192,7 +183,6 @@ export default function DeviceOptions({
               value={parameters.swing}
               onChange={(newSwing) => {
                 onSave({
-                  ...parameters,
                   swing: newSwing,
                 });
               }}

@@ -21,15 +21,12 @@ export default function Device({
   let statusInput = null;
 
   function handleStatusChange(nextStatus) {
-    let newDevice = {
+    updateDevice({
       id: id,
-      type: type,
-      room: room,
-      name: name,
-      status: nextStatus,
-      parameters: parameters,
-    };
-    updateDevice(newDevice);
+      changes: {
+        status: nextStatus,
+      },
+    });
   }
 
   function handleRemoveDevice() {
@@ -101,11 +98,9 @@ export default function Device({
           setName(newName);
           updateDevice({
             id: id,
-            type: type,
-            room: room,
-            name: newName,
-            status: status,
-            parameters: parameters,
+            changes: {
+              name: newName,
+            },
           });
         }}
         disabled={disabled}
@@ -120,11 +115,9 @@ export default function Device({
             setRoom(newRoom);
             updateDevice({
               id: id,
-              type: type,
-              room: newRoom,
-              name: name,
-              status: status,
-              parameters: parameters,
+              changes: {
+                room: newRoom,
+              },
             });
           }}
         />
@@ -136,14 +129,10 @@ export default function Device({
         type={type}
         parameters={parameters}
         onSave={(newParameters) => {
-          setParameters({ ...newParameters });
+          setParameters({ ...parameters, ...newParameters });
           deviceAction({
             id: id,
-            type: type,
-            room: room,
-            name: name,
-            status: status,
-            parameters: { ...newParameters },
+            changes: { ...newParameters },
           });
         }}
         disabled={disabled}
