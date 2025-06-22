@@ -1,11 +1,11 @@
-// Minimum temperature for water heater
-export const MIN_WATER_TEMP = -Infinity;
-// Maximum temperature for water heater
-export const MAX_WATER_TEMP = Infinity;
-// Minimum temperature for air conditioner
-export const MIN_AC_TEMP = -Infinity;
-// Maximum temperature for air conditioner
-export const MAX_AC_TEMP = Infinity;
+// Minimum temperature (celsius) for water heater
+export const MIN_WATER_TEMP = 49;
+// Maximum temperature (celsius) for water heater
+export const MAX_WATER_TEMP = 60;
+// Minimum temperature (celsius) for air conditioner
+export const MIN_AC_TEMP = 16;
+// Maximum temperature (celsius) for air conditioner
+export const MAX_AC_TEMP = 30;
 // Minimum brightness for dimmable light
 export const MIN_BRIGHTNESS = 0;
 // Maximum brightness for dimmable light
