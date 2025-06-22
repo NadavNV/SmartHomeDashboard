@@ -21,7 +21,6 @@ export default function DeviceOptions({
   // Whether or not to disabled input fields
   disabled,
 }) {
-  console.log(`Rendering device options: ${JSON.stringify(parameters)}`);
   switch (type) {
     case "water_heater":
       return (
@@ -41,6 +40,16 @@ export default function DeviceOptions({
               disabled={disabled}
             />
           </li>
+          {parameters.is_heating && (
+            <li>
+              <span style={{ color: "#FF4500" }}>Heating</span>
+            </li>
+          )}
+          {!parameters.is_heating && (
+            <li>
+              <span style={{ color: "#00BFFF" }}>Not heating</span>
+            </li>
+          )}
           <li>
             <label>
               Timer enabled:

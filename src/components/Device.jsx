@@ -14,18 +14,9 @@ export default function Device({
   deviceAction, // Function for applying an action on the device
   disabled, // Whether or not input fields should be disabled
 }) {
-  // const [name, setName] = useState(initDevice.name);
-  // const [room, setRoom] = useState(initDevice.room);
-  // const [status, setStatus] = useState(initDevice.status);
-  // const [parameters, setParameters] = useState({ ...initDevice.parameters });
   // What components to display for the device status,
   // based on the device type.
   let statusInput = null;
-
-  console.log(
-    `Rendering device: ID: ${id}, type: ${type}, name: ${name}, room: ${room},\
-     status: ${status}, parameters: ${parameters}`
-  );
 
   function handleStatusChange(nextStatus) {
     updateDevice({
@@ -52,8 +43,7 @@ export default function Device({
             type="checkbox"
             checked={status === "open"}
             onChange={() => {
-              let nextStatus = status === "open" ? "closed" : "open";
-              handleStatusChange(nextStatus);
+              handleStatusChange(status === "open" ? "closed" : "open");
             }}
             disabled={disabled}
           />
@@ -68,8 +58,7 @@ export default function Device({
             type="checkbox"
             checked={status === "locked"}
             onChange={() => {
-              let nextStatus = status === "open" ? "locked" : "open";
-              handleStatusChange(nextStatus);
+              handleStatusChange(status === "open" ? "locked" : "open");
             }}
             disabled={disabled}
           />
@@ -84,8 +73,7 @@ export default function Device({
             type="checkbox"
             checked={status === "on"}
             onChange={() => {
-              let nextStatus = status === "on" ? "off" : "on";
-              handleStatusChange(nextStatus);
+              handleStatusChange(status === "on" ? "off" : "on");
             }}
             disabled={disabled}
           />
