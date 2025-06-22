@@ -1,6 +1,6 @@
 # Smart Home Dashboard
 
-An application for controling Smart Home devices, meant to be used in conjunction with the [SmartHome](https://github.com/NadavNV/SmartHome-DevSecOps) server.
+An application for controling Smart Home devices, meant to be used in conjunction with the [SmartHome](https://github.com/NadavNV/SmartHomeBackend) server.
 
 To use, either go to [https://nadavnv.github.io/SmartHomeDashboard/](https://nadavnv.github.io/SmartHomeDashboard/), or:
 
