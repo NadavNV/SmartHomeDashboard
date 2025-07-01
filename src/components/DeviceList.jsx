@@ -121,6 +121,16 @@ export default function DeviceList() {
     }
   }
 
+  if (deviceIdsQuery.isError || devicesQuery.isError) {
+    return (
+      <>
+        <h1>Error loading data</h1>
+        {deviceIdsQuery.isError && <p>{deviceIdsQuery.error.message}</p>}
+        {devicesQuery.isError && <p>{devicesQuery.errors[0].message}</p>}
+      </>
+    );
+  }
+
   return (
     <div
       style={{

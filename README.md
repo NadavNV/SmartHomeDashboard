@@ -1,15 +1,32 @@
-# Smart Home Dashboard
+# SmartHomeDashboard
 
-An application for controling Smart Home devices, meant to be used in conjunction with the [SmartHome](https://github.com/NadavNV/SmartHomeBackend) server.
+Part of our final project in DevSecOps course at Bar-Ilan
+University ([Main project repository](https://github.com/NadavNV/SmartHomeConfig)). The project allows viewing and
+managing different Smart home devices such as lights, water heaters, or air conditioners.
 
-To use, either go to [https://nadavnv.github.io/SmartHomeDashboard/](https://nadavnv.github.io/SmartHomeDashboard/), or:
+It is divided into several microservices, and this microservice is the frontend dashboard. This is where the user can
+view and change the various devices.
 
-- Install all dependencies.
-- Clone this repository.
-- In the repository directory, run `npm install`.
-- Run `npm run build`.
-- The application is now available under `./dist/index.html`. Alternatively, you can run `npm run preview`.
+---
 
-## Dependencies
+## Requirements
 
-- [node.js](https://nodejs.org/en/download)
+- A working [backend instance](https://github.com/NadavNV/SmartHomeBackend).
+- [node.js](https://nodejs.org/en)
+
+## Usage
+
+- To run on your local machine:
+  - Make sure you have node.js installed and a running backend instance.
+  - Clone this repo.
+  - Run `npm install`.
+  - Set an environment variable named `VITE_API_URL` whose value is the full address of the backend instance, including
+    port
+    (e.g. `http://localhost:5200`).
+  - Run `npm run build`.
+  - Run `npm run preview`.
+- To run in a Docker container:
+  - Make sure you have a running backend instance.
+  - Clone this repo.
+  - Run `docker build -t <name for the image> .`.
+  - Run `docker run -p 3001:3001 -e "VITE_API_URL=<full backend address>" <image name>`.
