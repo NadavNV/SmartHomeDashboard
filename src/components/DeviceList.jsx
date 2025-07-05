@@ -143,7 +143,7 @@ export default function DeviceList() {
       {/* Status message */}
       {(isFetching > 0 || isMutating > 0) && <h1>Loading...</h1>}
       {isFetching === 0 && isMutating === 0 && (
-        <h1>{`Data retrievd at ${currentTime}`}</h1>
+        <h1>{`Data retrieved at ${currentTime}`}</h1>
       )}
       <hr />
       {/* Device groups list */}
