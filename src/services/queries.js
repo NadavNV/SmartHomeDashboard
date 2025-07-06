@@ -3,8 +3,13 @@ import { getDeviceIds, getDevice } from "./api";
 
 // Get the data on a list of devices based on their IDs, in parallel form.
 export function useDevices(ids) {
+  const normalizedIds = Array.isArray(ids)
+    ? ids
+    : ids === null || ids === undefined
+    ? []
+    : [ids];
   return useQueries({
-    queries: (ids ?? []).map((id) => {
+    queries: normalizedIds.map((id) => {
       return {
         queryKey: ["device", id],
         queryFn: () => getDevice(id),
