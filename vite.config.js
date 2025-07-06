@@ -16,8 +16,5 @@ export default defineConfig(({ command, mode }) => {
         platform: "linux",
       },
     },
-    define: {
-      VITE_API_URL: JSON.stringify(env.VITE_API_URL),
-    },
   };
 });
