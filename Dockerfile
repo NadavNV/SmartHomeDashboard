@@ -26,6 +26,6 @@ RUN npm run build
 # Stage 2 - Building nginx
 FROM nginx:mainline-alpine AS prod
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 3001
 CMD ["nginx", "-g", "daemon off;"]
