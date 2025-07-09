@@ -27,9 +27,9 @@ export default function TimeInput({
   function verifyValue(text) {
     // Regex explanation:
     //
-    // ([01]?\d|2[0-3]) - Hours. Either a 2 followed by 0-3 or an optional
-    //                    initial digit of 0 or 1 follwed by any digit.
-    // :? - Optional colon.
+    // ([01]\d|2[0-3]) - Hours. Either a 2 followed by 0-3 or an
+    //                    initial digit of 0 or 1 followed by any digit.
+    // : - Colon.
     // ([0-5]\d) - Minutes, 0-5 followed by any digit.
     let regex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
     if (text === null) {
