@@ -58,7 +58,7 @@ export default function Device({
             type="checkbox"
             checked={status === "locked"}
             onChange={() => {
-              handleStatusChange(status === "open" ? "locked" : "open");
+              handleStatusChange(status === "unlocked" ? "locked" : "unlocked");
             }}
             disabled={disabled}
           />
