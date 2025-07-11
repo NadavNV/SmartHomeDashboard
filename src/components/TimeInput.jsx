@@ -31,7 +31,7 @@ export default function TimeInput({
     //                    initial digit of 0 or 1 followed by any digit.
     // : - Colon.
     // ([0-5]\d) - Minutes, 0-5 followed by any digit.
-    let regex = /^([01]\d|2[0-3]):?([0-5]\d)$/;
+    let regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
     if (text === null) {
       return false;
     }
