@@ -155,6 +155,7 @@ export default function NewDeviceForm({
         addDevice({
           id: id,
           name: name,
+          room: room,
           type: type,
           status: status,
           parameters: cleanParameters(),
@@ -214,8 +215,9 @@ export default function NewDeviceForm({
             // Set the status based on the selected type
             switch (newType) {
               case "curtain":
-              case "door_lock":
                 setStatus("open");
+              case "door_lock":
+                setStatus("unlocked");
                 break;
               default:
                 setStatus("off");
