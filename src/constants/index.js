@@ -1,15 +1,23 @@
 // Minimum temperature (celsius) for water heater
-export const MIN_WATER_TEMP = 49;
+export const MIN_WATER_TEMP = parseInt(
+  import.meta.env.VITE_MIN_WATER_TEMP ?? "49"
+);
 // Maximum temperature (celsius) for water heater
-export const MAX_WATER_TEMP = 60;
+export const MAX_WATER_TEMP = parseInt(
+  import.meta.env.VITE_MAX_WATER_TEMP ?? "60"
+);
 // Minimum temperature (celsius) for air conditioner
-export const MIN_AC_TEMP = 16;
+export const MIN_AC_TEMP = parseInt(import.meta.env.VITE_MIN_AC_TEMP ?? "16");
 // Maximum temperature (celsius) for air conditioner
-export const MAX_AC_TEMP = 30;
+export const MAX_AC_TEMP = parseInt(import.meta.env.VITE_MAX_AC_TEMP ?? "30");
 // Minimum brightness for dimmable light
-export const MIN_BRIGHTNESS = 0;
+export const MIN_BRIGHTNESS = parseInt(
+  import.meta.env.VITE_MIN_BRIGHTNESS ?? "0"
+);
 // Maximum brightness for dimmable light
-export const MAX_BRIGHTNESS = 100;
+export const MAX_BRIGHTNESS = parseInt(
+  import.meta.env.VITE_MAX_BRIGHTNESS ?? "100"
+);
 
 // Default target temperature for a water heater
 export const DEFAULT_WATER_TEMP = 60;
@@ -36,7 +44,7 @@ export const DEFAULT_BRIGHTNESS = 80;
 // Whether or not a light has dynamic color by default
 export const DEFAULT_DYNAMIC_COLOR = false;
 // Default color for a dynamic color light
-export const DEFAULT_LIGHT_COLOR = "#FFFFFF";
+export const DEFAULT_LIGHT_COLOR = "    #FFFFFF";
 
 // Whether or not a door lock has auto-lock enabled by default
 export const DEFAULT_AUTO_LOCK_ENABLED = false;
@@ -45,3 +53,13 @@ export const DEFAULT_BATTERY = 100;
 
 // Default position for a curtain
 export const DEFAULT_POSITION = 100;
+
+// Regex to check for valid ISO format time string
+export const TIME_REGEX = new RegExp(
+  import.meta.env.VITE_TIME_REGEX ??
+    "^([01][0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$"
+);
+// Regex to check for valid hex color string
+export const COLOR_REGEX = new RegExp(
+  import.meta.env.VITE_COLOR_REGEX ?? "^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+);

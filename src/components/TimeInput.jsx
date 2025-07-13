@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { TIME_REGEX } from "../constants";
 
 // React component that either displays an text input field when in editing
 // mode or displays the current value when in non-editing mode. Only accepts
@@ -25,13 +26,7 @@ export default function TimeInput({
   }, [editing]);
 
   function verifyValue(text) {
-    // Regex explanation:
-    //
-    // ([01]\d|2[0-3]) - Hours. Either a 2 followed by 0-3 or an
-    //                    initial digit of 0 or 1 followed by any digit.
-    // : - Colon.
-    // ([0-5]\d) - Minutes, 0-5 followed by any digit.
-    let regex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    let regex = TIME_REGEX;
     if (text === null) {
       return false;
     }
