@@ -8,6 +8,10 @@ import { createDevice, deleteDevice, deviceAction, updateDevice } from "./api";
 function handleError(error) {
   if (typeof error.response === "object") {
     if (typeof error.response.data === "object") {
+      if (typeof error.response.data.error === "array") {
+        alert(error.response.data.error.join("\n"));
+        return;
+      }
       alert(error.response.data.error);
       return;
     }
