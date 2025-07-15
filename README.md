@@ -30,6 +30,7 @@ view and change the various devices.
     cd SmartHomeDashboard
     ```
   - Run `npm install`.
+  - Edit the value of `proxy_pass` in `nginx.conf` to the address of your backend.
   - Set an environment variable named `VITE_API_URL` whose value is the full address of the backend instance, including
     port
     (e.g. `http://localhost:5200`).
@@ -42,5 +43,5 @@ view and change the various devices.
     git clone https://github.com/NadavNV/SmartHomeDashboard.git
     cd SmartHomeDashboard
     ```
-  - Run `docker build -t <name for the image> .`.
-  - Run `docker run -p 3001:3001 -e "VITE_API_URL=<full backend address>" <image name>`.
+  - Run `docker build --build-arg "VITE_API_URL=<full backend address>" -t <name for the image> .`.
+  - Run `docker run -p 3001:3001 -e "BACKEND_URL=<full backend address, without http://> <image name>`.
