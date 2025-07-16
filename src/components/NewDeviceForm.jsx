@@ -4,27 +4,33 @@ import NumberInput from "./NumberInput";
 import TimeInput from "./TimeInput";
 import Select from "./Select";
 import {
+  DEFAULT_AC_STATUS,
   DEFAULT_AC_FAN,
   DEFAULT_AC_MODE,
   DEFAULT_AC_SWING,
   DEFAULT_AC_TEMP,
+  MIN_AC_TEMP,
+  MAX_AC_TEMP,
+  DEFAULT_LOCK_STATUS,
   DEFAULT_AUTO_LOCK_ENABLED,
   DEFAULT_BATTERY,
+  DEFAULT_LIGHT_STATUS,
   DEFAULT_BRIGHTNESS,
   DEFAULT_DIMMABLE,
   DEFAULT_DYNAMIC_COLOR,
   DEFAULT_LIGHT_COLOR,
+  MIN_BRIGHTNESS,
+  MAX_BRIGHTNESS,
+  DEFAULT_CURTAIN_STATUS,
   DEFAULT_POSITION,
+  DEFAULT_WATER_HEATER_STATUS,
+  MIN_WATER_TEMP,
+  MAX_WATER_TEMP,
   DEFAULT_START_TIME,
   DEFAULT_STOP_TIME,
   DEFAULT_TIMER_ENABLED,
   DEFAULT_WATER_TEMP,
-  MIN_AC_TEMP,
-  MAX_AC_TEMP,
-  MIN_WATER_TEMP,
-  MAX_WATER_TEMP,
-  MIN_BRIGHTNESS,
-  MAX_BRIGHTNESS,
+  DEFAULT_AC_STATUS,
 } from "../constants";
 
 // Form for creating a new smart home device. Adjusts based on the type selected
@@ -155,6 +161,7 @@ export default function NewDeviceForm({
         addDevice({
           id: id,
           name: name,
+          room: room,
           type: type,
           status: status,
           parameters: cleanParameters(),
@@ -214,8 +221,19 @@ export default function NewDeviceForm({
             // Set the status based on the selected type
             switch (newType) {
               case "curtain":
+                setStatus(DEFAULT_CURTAIN_STATUS);
+                break;
               case "door_lock":
-                setStatus("open");
+                setStatus(DEFAULT_LOCK_STATUS);
+                break;
+              case "water_heater":
+                setStatus(DEFAULT_WATER_HEATER_STATUS);
+                break;
+              case "air_conditioner":
+                setStatus(DEFAULT_AC_STATUS);
+                break;
+              case "light":
+                setStatus(DEFAULT_LIGHT_STATUS);
                 break;
               default:
                 setStatus("off");
