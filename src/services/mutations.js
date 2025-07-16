@@ -59,8 +59,8 @@ export function useDeleteDevice() {
       // Fetch updated device data
       await queryClient.invalidateQueries({ queryKey: ["device_ids"] });
     },
-    onSettled: (data, variables) =>
-      queryClient.removeQueries({ queryKey: ["device", variables.id] }),
+    onSettled: (data, error, variables, context) =>
+      queryClient.removeQueries({ queryKey: ["device", variables] }),
   });
 }
 
