@@ -30,7 +30,6 @@ import {
   DEFAULT_STOP_TIME,
   DEFAULT_TIMER_ENABLED,
   DEFAULT_WATER_TEMP,
-  DEFAULT_AC_STATUS,
 } from "../constants";
 
 // Form for creating a new smart home device. Adjusts based on the type selected
