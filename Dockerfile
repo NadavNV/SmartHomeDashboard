@@ -11,6 +11,8 @@ RUN mkdir /src/services
 
 # Install dependencies
 COPY package*.json .
+# Update npm
+RUN npm install -g npm@11.4.2
 RUN npm install
 
 # Copy source code

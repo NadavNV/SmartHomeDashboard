@@ -34,7 +34,7 @@
     "vite": "^6.3.5",
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
     "babel-jest": "^30.0.4",
     "core-js": "^3.39.0",
     "regenerator-runtime": "^0.14.0",
