@@ -23,7 +23,6 @@ export default function DeviceOptions({
 }) {
   switch (type) {
     case "water_heater":
-      console.log(JSON.stringify(parameters));
       return (
         <ul>
           <li>Temperature: {parameters.temperature}</li>

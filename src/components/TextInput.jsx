@@ -39,6 +39,11 @@ export default function TextInput({
           disabled={disabled}
           type="text"
           defaultValue={initValue}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleButtonClick();
+            }
+          }}
         />
       )}
       {!editing &&

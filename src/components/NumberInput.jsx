@@ -59,6 +59,11 @@ export default function NumberInput({
           disabled={disabled}
           type="number"
           defaultValue={initValue}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleButtonClick();
+            }
+          }}
         />
       )}
       {!editing &&
