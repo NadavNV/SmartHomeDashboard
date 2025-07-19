@@ -1,4 +1,4 @@
-import DeviceList from "./components/DeviceList";
+import DeviceList from "src/components/DeviceList";
 
 export default function App() {
   return <DeviceList />;

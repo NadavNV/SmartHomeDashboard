@@ -13,6 +13,7 @@ export default defineConfig(({ command, mode }) => {
     ...rootEnv, // rootEnv takes precedence
   };
   return {
+    root: ".",
     plugins: [react()],
     test: {
       environment: "jsdom",
