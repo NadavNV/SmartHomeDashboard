@@ -23,7 +23,7 @@ COPY /src/services /src/services
 COPY *.html .
 COPY *.js .
 
-RUN ls -R
+RUN ls /app
 
 ARG VITE_API_URL
 ENV VITE_API_URL=${VITE_API_URL}
