@@ -1,3 +1,6 @@
+import React from "react";
+
 export default function Device() {
-  return <div data-testid="mock-device" />;
+  // console.log("Mock Device is loaded!");
+  return <div data-testid="mock-device">Mock Device</div>;
 }

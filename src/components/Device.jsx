@@ -1,5 +1,5 @@
-import DeviceOptions from "./DeviceOptions";
-import TextInput from "./TextInput";
+import DeviceOptions from "src/components/DeviceOptions";
+import TextInput from "src/components/TextInput";
 
 // Displays the information of a single device, and allows editing it.
 export default function Device({
@@ -11,7 +11,6 @@ export default function Device({
   parameters,
   updateDevice, // Function for updating device configuration
   removeDevice, // Function for removing the device
-  deviceAction, // Function for applying an action on the device
   disabled, // Whether or not input fields should be disabled
 }) {
   // What components to display for the device status,
@@ -119,9 +118,11 @@ export default function Device({
         type={type}
         parameters={{ ...parameters }}
         onSave={(newParameters) => {
-          deviceAction({
+          updateDevice({
             id: id,
-            changes: { ...newParameters },
+            changes: {
+              parameters: { ...newParameters },
+            },
           });
         }}
         disabled={disabled}

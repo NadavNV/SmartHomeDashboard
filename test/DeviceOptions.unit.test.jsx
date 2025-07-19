@@ -1,9 +1,11 @@
-import { render, screen } from "@testing-library/react";
-
+import { expect, vi } from "vitest";
 // Mock components
-jest.mock("src/components/NumberInput");
-jest.mock("src/components/TimeInput");
-jest.mock("src/components/Select");
+vi.mock("src/components/NumberInput");
+vi.mock("src/components/TimeInput");
+vi.mock("src/components/Select");
+vi.mock("src/constants");
+import { render, screen } from "@testing-library/react";
+import DeviceOptions from "src/components/DeviceOptions";
 
 describe("Test DeviceOptions component", () => {
   describe("for water heater devices", () => {
@@ -19,7 +21,7 @@ describe("Test DeviceOptions component", () => {
             scheduled_on: "06:30",
             scheduled_off: "08:00",
           }}
-          onSave={jest.fn()}
+          onSave={vi.fn()}
           disabled={false}
         />
       );
@@ -40,7 +42,7 @@ describe("Test DeviceOptions component", () => {
             scheduled_on: "06:30",
             scheduled_off: "08:00",
           }}
-          onSave={jest.fn()}
+          onSave={vi.fn()}
           disabled={false}
         />
       );
@@ -62,7 +64,7 @@ describe("Test DeviceOptions component", () => {
             scheduled_on: "06:30",
             scheduled_off: "08:00",
           }}
-          onSave={jest.fn()}
+          onSave={vi.fn()}
           disabled={false}
         />
       );
@@ -73,18 +75,130 @@ describe("Test DeviceOptions component", () => {
     });
   });
   describe("for lights", () => {
-    // TODO: Add light tests
+    it("renders the UI", () => {
+      render(
+        <DeviceOptions
+          type="light"
+          parameters={{
+            is_dimmable: true,
+            dynamic_color: true,
+            brightness: 75,
+            color: "#615243",
+          }}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.getByText(/brightness/i)).toBeInTheDocument();
+      expect(screen.getByTestId("mock-number-input")).toBeInTheDocument();
+      expect(screen.getByText(/color/i)).toBeInTheDocument();
+      expect(screen.getByTestId("color-picker")).toBeInTheDocument();
+    });
+    it("doesn't render the brightness if not dimmable", () => {
+      render(
+        <DeviceOptions
+          type="light"
+          parameters={{
+            is_dimmable: false,
+            dynamic_color: true,
+            brightness: 75,
+            color: "#615243",
+          }}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.queryByText(/brightness/i)).not.toBeInTheDocument();
+      expect(screen.queryByTestId("mock-number-input")).not.toBeInTheDocument();
+    });
+    it("doesn't render the color if not dynamic color", () => {
+      render(
+        <DeviceOptions
+          type="light"
+          parameters={{
+            is_dimmable: true,
+            dynamic_color: false,
+            brightness: 75,
+            color: "#615243",
+          }}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.queryByText(/color/i)).not.toBeInTheDocument();
+      expect(screen.queryByTestId("color-picker")).not.toBeInTheDocument();
+    });
   });
   describe("for air conditioners", () => {
-    // TODO: Add air conditioner tests
+    it("renders the UI for air conditioner", () => {
+      render(
+        <DeviceOptions
+          type="air_conditioner"
+          parameters={{
+            temperature: 22,
+            mode: "cool",
+            fan_speed: "low",
+            swing: "auto",
+          }}
+          onsave={vi.fn()}
+          disabled={false}
+        />
+      );
+      expect(screen.getByText(/temperature/i)).toBeInTheDocument();
+      expect(screen.getByTestId("mock-number-input")).toBeInTheDocument();
+      expect(screen.getAllByTestId("mock-select")).toHaveLength(3);
+    });
   });
   describe("for door locks", () => {
-    // TODO: Add door lock tests
+    it("renders the UI for door lock", () => {
+      render(
+        <DeviceOptions
+          type="door_lock"
+          parameters={{
+            auto_lock_enabled: true,
+            battery_level: 72,
+          }}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.getByText(/auto-lock/i)).toBeInTheDocument();
+      expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      expect(screen.getByText(/battery/i)).toBeInTheDocument();
+    });
   });
   describe("for curtains", () => {
-    // TODO Add curtain tests
+    it("renders the UI for curtains", () => {
+      render(
+        <DeviceOptions
+          type="curtain"
+          parameters={{
+            position: 72,
+          }}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.getByText(/position/i)).toBeInTheDocument();
+    });
   });
   describe("when the type is unknown", () => {
-    // TODO: Add error tests
+    it("renders the UI for curtains", () => {
+      render(
+        <DeviceOptions
+          type="steve"
+          parameters={{}}
+          onSave={vi.fn()}
+          disabled={false}
+        />
+      );
+
+      expect(screen.getByText(/unknown device type/i)).toBeInTheDocument();
+    });
   });
 });

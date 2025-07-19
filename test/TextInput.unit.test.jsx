@@ -1,16 +1,16 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import TextInput from "../src/components/TextInput";
+import TextInput from "src/components/TextInput";
 
 describe("TextInput component", () => {
   const initValue = "David";
   const setup = (props = {}) => {
-    const onSave = jest.fn();
+    const onSave = vi.fn();
     render(<TextInput initValue={initValue} onSave={onSave} {...props} />);
     return { onSave };
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("displays initial value and Edit button", () => {

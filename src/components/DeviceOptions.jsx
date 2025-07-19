@@ -1,6 +1,6 @@
-import TimeInput from "./TimeInput";
-import NumberInput from "./NumberInput";
-import Select from "./Select";
+import TimeInput from "src/components/TimeInput";
+import NumberInput from "src/components/NumberInput";
+import Select from "src/components/Select";
 import {
   MIN_WATER_TEMP,
   MAX_WATER_TEMP,
@@ -8,7 +8,7 @@ import {
   MAX_BRIGHTNESS,
   MIN_AC_TEMP,
   MAX_AC_TEMP,
-} from "../constants";
+} from "src/constants";
 
 export default function DeviceOptions({
   // e.g. water heater, light, etc.
@@ -111,6 +111,7 @@ export default function DeviceOptions({
               <label>
                 Color:{" "}
                 <input
+                  data-testid="color-picker"
                   disabled={disabled}
                   type="color"
                   defaultValue={parameters.color}

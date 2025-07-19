@@ -4,10 +4,10 @@ import {
   useIsMutating,
   useQueryClient,
 } from "@tanstack/react-query";
-import NewDeviceForm from "./NewDeviceForm";
-import DeviceGroup from "./DeviceGroup";
-import { useDeviceIds, useDevices } from "../services/queries";
-import { useCreateDevice } from "../services/mutations";
+import NewDeviceForm from "src/components/NewDeviceForm";
+import DeviceGroup from "src/components/DeviceGroup";
+import { useDeviceIds, useDevices } from "src/services/queries";
+import { useCreateDevice } from "src/services/mutations";
 
 // The main component of the app.
 // Displays a status message at the top, below it a list of all device

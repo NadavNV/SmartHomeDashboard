@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { TIME_REGEX } from "../constants";
+import { TIME_REGEX } from "src/constants";
 
 // React component that either displays an text input field when in editing
 // mode or displays the current value when in non-editing mode. Only accepts

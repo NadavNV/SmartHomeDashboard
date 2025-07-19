@@ -1,3 +1,6 @@
+import React from "react";
+
 export default function DeviceGroup() {
-  return <div data-testid="mock-device-group" />;
+  // console.log("Mock DeviceGroup is loaded!");
+  return <div data-testid="mock-device-group">Mock DeviceGroup</div>;
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createDevice, deleteDevice, deviceAction, updateDevice } from "./api";
+import { createDevice, deleteDevice, updateDevice } from "src/services/api";
 
 // Our API sends errors with a JSON object containing an 'error' key
 // with an error message as its value. If the error is returned by our API
@@ -65,20 +65,5 @@ export function useDeleteDevice() {
     },
     onSettled: (data, error, variables, context) =>
       queryClient.removeQueries({ queryKey: ["device", variables] }),
-  });
-}
-
-export function useDeviceAction() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (device) => deviceAction(device),
-    onError: (error) => handleError(error),
-    onSuccess: async (data, variables) => {
-      // Fetch updated device data
-      await queryClient.invalidateQueries({
-        queryKey: ["device", variables.id],
-      });
-    },
   });
 }

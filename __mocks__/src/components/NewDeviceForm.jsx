@@ -1,3 +1,6 @@
+import React from "react";
+
 export default function NewDeviceForm() {
-  return <div data-testid="mock-new-device-form" />;
+  // console.log("Mock NewDeviceForm is loaded!");
+  return <div data-testid="mock-new-device-form">Mock NewDeviceForm</div>;
 }

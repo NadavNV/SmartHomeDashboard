@@ -1,9 +1,5 @@
-import Device from "./Device";
-import {
-  useDeleteDevice,
-  useDeviceAction,
-  useUpdateDevice,
-} from "../services/mutations";
+import Device from "src/components/Device";
+import { useDeleteDevice, useUpdateDevice } from "src/services/mutations";
 import { useIsFetching, useIsMutating } from "@tanstack/react-query";
 
 export default function DeviceGroup({
@@ -19,7 +15,6 @@ export default function DeviceGroup({
 
   const deleteDeviceMutation = useDeleteDevice();
   const updateDeviceMutation = useUpdateDevice();
-  const deviceActionMutation = useDeviceAction();
 
   // Convert device objects into React components
   const devices = (deviceList ?? []).map((device) => {
@@ -37,9 +32,6 @@ export default function DeviceGroup({
           }}
           removeDevice={(idToDelete) => {
             deleteDeviceMutation.mutate(idToDelete);
-          }}
-          deviceAction={(action) => {
-            deviceActionMutation.mutate(action);
           }}
           // Disable input fields while there are pending requests
           disabled={isFetching > 0 || isMutating > 0}

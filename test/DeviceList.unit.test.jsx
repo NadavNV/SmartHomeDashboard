@@ -1,7 +1,18 @@
+import { vi } from "vitest";
+// === Mock external dependencies ===
+vi.mock("src/services/queries");
+vi.mock("src/services/mutations");
+vi.mock("src/components/NewDeviceForm");
+vi.mock("src/components/DeviceGroup");
+vi.mock("@tanstack/react-query", () => ({
+  useIsFetching: vi.fn(),
+  useIsMutating: vi.fn(),
+  useQueryClient: vi.fn(),
+}));
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import DeviceList from "../src/DeviceList";
-import { useDeviceIds, useDevices } from "../services/queries";
-import { useCreateDevice } from "../services/mutations";
+import DeviceList from "src/components/DeviceList";
+import { useDeviceIds, useDevices } from "src/services/queries";
+import { useCreateDevice } from "src/services/mutations";
 import {
   useIsFetching,
   useIsMutating,
@@ -9,23 +20,7 @@ import {
 } from "@tanstack/react-query";
 
 // Use fake timers globally
-jest.useFakeTimers();
-
-// === Mock external dependencies ===
-jest.mock("../services/queries", () => ({
-  useDeviceIds: jest.fn(),
-  useDevices: jest.fn(),
-}));
-
-jest.mock("../services/mutations", () => ({
-  useCreateDevice: jest.fn(),
-}));
-
-jest.mock("@tanstack/react-query", () => ({
-  useIsFetching: jest.fn(),
-  useIsMutating: jest.fn(),
-  useQueryClient: jest.fn(),
-}));
+vi.useFakeTimers();
 
 // === Setup mock data ===
 const mockDeviceIds = ["device-1", "device-2"];
@@ -42,17 +37,22 @@ const mockDevices = [
   },
 ];
 
-const mockInvalidateQueries = jest.fn();
+const mockInvalidateQueries = vi.fn().mockImplementation(async (...args) => {
+  console.log("invalidateQueries called with", args);
+  return Promise.resolve();
+});
 
 beforeEach(() => {
+  vi.clearAllMocks();
   useQueryClient.mockReturnValue({
     invalidateQueries: mockInvalidateQueries,
   });
-  useCreateDevice.mockReturnValue({ mutate: jest.fn() });
-  jest.clearAllMocks();
+  useCreateDevice.mockReturnValue({ mutate: vi.fn() });
+  useIsFetching.mockReturnValue(0);
+  useIsMutating.mockReturnValue(0);
 });
 
-test("shows loading when fetching", () => {
+it("shows loading when fetching", () => {
   useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
   useDevices.mockReturnValue({ data: mockDevices, isError: false });
   useIsFetching.mockReturnValue(1);
@@ -62,48 +62,53 @@ test("shows loading when fetching", () => {
   expect(screen.getByText(/Loading/)).toBeInTheDocument();
 });
 
-test("shows data and allows adding a device", () => {
+it("shows data and allows adding a device", () => {
   useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
   useDevices.mockReturnValue({ data: mockDevices, isError: false });
-  useIsFetching.mockReturnValue(0);
-  useIsMutating.mockReturnValue(0);
 
   render(<DeviceList />);
   expect(screen.getByText(/Data retrieved at/)).toBeInTheDocument();
+  expect(screen.getAllByTestId("mock-device-group")).toHaveLength(2);
 
   fireEvent.click(screen.getByText("Add device"));
-  expect(screen.getByText("Add Device")).toBeInTheDocument(); // Assuming form has a header
+  expect(screen.getByTestId("mock-new-device-form")).toBeInTheDocument();
 });
 
 test("reload button invalidates device queries", async () => {
   useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
   useDevices.mockReturnValue({ data: mockDevices, isError: false });
-  useIsFetching.mockReturnValue(0);
-  useIsMutating.mockReturnValue(0);
 
   render(<DeviceList />);
+
   fireEvent.click(screen.getByText("Reload"));
-  expect(mockInvalidateQueries).toHaveBeenCalledWith({
-    queryKey: ["device_ids"],
+
+  // Flush immediate async operations, not long-running timers
+  await act(async () => {
+    vi.advanceTimersByTime(0);
+    await Promise.resolve();
   });
-  expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["device"] });
+
+  expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+
+  const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
+  expect(calls).toContainEqual(["device_ids"]);
+  expect(calls).toContainEqual(["device"]);
 });
 
-test("auto reload triggers after 60 seconds of no user activity", () => {
+test("auto reload triggers after 60 seconds of no user activity", async () => {
   useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
   useDevices.mockReturnValue({ data: mockDevices, isError: false });
-  useIsFetching.mockReturnValue(0);
-  useIsMutating.mockReturnValue(0);
 
   render(<DeviceList />);
 
   // Advance fake timers by 60 seconds
-  act(() => {
-    jest.advanceTimersByTime(60000);
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(60000);
   });
 
-  expect(mockInvalidateQueries).toHaveBeenCalledWith({
-    queryKey: ["device_ids"],
-  });
-  expect(mockInvalidateQueries).toHaveBeenCalledWith({ queryKey: ["device"] });
+  expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+
+  const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
+  expect(calls).toContainEqual(["device_ids"]);
+  expect(calls).toContainEqual(["device"]);
 });

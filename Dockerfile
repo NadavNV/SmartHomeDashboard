@@ -13,13 +13,13 @@ RUN mkdir /src/services
 COPY package*.json .
 # Update npm
 RUN npm install -g npm@11.4.2
-RUN npm install
+RUN npm ci
 
 # Copy source code
-COPY ./src/ ./src
-COPY ./src/components/ ./src/components
-COPY ./src/constants/ ./src/constants
-COPY ./src/services/ ./src/services
+COPY /src /src
+COPY /src/components /src/components
+COPY /src/constants /src/constants
+COPY /src/services /src/services
 COPY *.html .
 COPY *.js .
 
@@ -31,15 +31,12 @@ RUN npm run build
 # Stage 2 - Building nginx
 FROM nginx:mainline-alpine AS prod
 
-RUN apk add --no-cache gettext
+# RUN apk add --no-cache gettext
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY default.conf.template /etc/nginx/templates/default.conf.template
-
-# COPY entrypoint.sh /entrypoint.sh
-# RUN chmod +x /entrypoint.sh
 
 EXPOSE 3001
 

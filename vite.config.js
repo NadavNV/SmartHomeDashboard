@@ -14,6 +14,17 @@ export default defineConfig(({ command, mode }) => {
   };
   return {
     plugins: [react()],
+    test: {
+      environment: "jsdom",
+      globals: true,
+      setupFiles: "./test/setupTests.js",
+      deps: {
+        moduleDirectories: ["node_modules", path.resolve(__dirname, "src")],
+      },
+      alias: {
+        src: path.resolve(__dirname, "src"),
+      },
+    },
     server: {
       port: 3001,
       host: true,
@@ -27,6 +38,11 @@ export default defineConfig(({ command, mode }) => {
     },
     define: {
       VITE_API_URL: JSON.stringify(env.VITE_API_URL),
+    },
+    resolve: {
+      alias: {
+        src: path.resolve(__dirname, "src"),
+      },
     },
   };
 });

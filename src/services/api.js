@@ -20,10 +20,6 @@ export const updateDevice = async (update) => {
   await axiosInstance.put(`/api/devices/${update.id}`, update.changes);
 };
 
-export const deviceAction = async (action) => {
-  await axiosInstance.post(`/api/devices/${action.id}/action`, action.changes);
-};
-
 export const deleteDevice = async (id) => {
   await axiosInstance.delete(`/api/devices/${id}`);
 };

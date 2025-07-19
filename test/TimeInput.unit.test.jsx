@@ -1,24 +1,24 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import TimeInput from "../src/components/TimeInput";
+import TimeInput from "src/components/TimeInput";
 
 // Needed to mock alert()
-global.alert = jest.fn();
+global.alert = vi.fn();
 
 // Mock regex in constants
-jest.mock("../constants", () => ({
+vi.mock("../src/constants", () => ({
   TIME_REGEX: /^([01]\d|2[0-3]):[0-5]\d$/, // 24h format HH:mm
 }));
 
 describe("TimeInput component", () => {
   const initValue = "12:00";
   const setup = (props = {}) => {
-    const onSave = jest.fn();
+    const onSave = vi.fn();
     render(<TimeInput initValue={initValue} onSave={onSave} {...props} />);
     return { onSave };
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("displays initial value and Edit button", () => {

@@ -1,19 +1,19 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import NumberInput from "../src/components/NumberInput";
+import NumberInput from "src/components/NumberInput";
 
 // Needed to mock alert()
-global.alert = jest.fn();
+global.alert = vi.fn();
 
-describe("TimeInput component", () => {
+describe("NumberInput component", () => {
   const initValue = 12;
   const setup = (props = {}) => {
-    const onSave = jest.fn();
+    const onSave = vi.fn();
     render(<NumberInput initValue={initValue} onSave={onSave} {...props} />);
     return { onSave };
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it("displays initial value and Edit button", () => {
@@ -37,7 +37,7 @@ describe("TimeInput component", () => {
     fireEvent.change(input, { target: { value: 59 } });
     fireEvent.click(screen.getByRole("button", { name: "Save" }));
 
-    expect(onSave).toHaveBeenCalledWith(59);
+    expect(onSave).toHaveBeenCalledWith("59");
     expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
   });
 
@@ -57,7 +57,7 @@ describe("TimeInput component", () => {
   });
 
   it("alerts and stays in edit mode on invalid input - only min", () => {
-    const { onSave } = setup({ max: 50 });
+    const { onSave } = setup({ min: 50 });
     fireEvent.click(screen.getByRole("button", { name: "Edit" }));
 
     const input = screen.getByRole("spinbutton");
@@ -108,6 +108,6 @@ describe("TimeInput component", () => {
     fireEvent.change(input, { target: { value: 8 } });
     fireEvent.keyDown(input, { key: "Enter", code: "Enter" });
 
-    expect(onSave).toHaveBeenCalledWith(8);
+    expect(onSave).toHaveBeenCalledWith("8");
   });
 });

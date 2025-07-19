@@ -1,3 +1,6 @@
+import React from "react";
+
 export default function TimeInput() {
-  return <div data-testid="mock-time-input" />;
+  // console.log("Mock TimeInput is loaded!");
+  return <div data-testid="mock-time-input">Mock TimeInpur</div>;
 }

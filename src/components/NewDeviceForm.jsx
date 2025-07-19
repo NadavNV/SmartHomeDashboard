@@ -1,8 +1,8 @@
 import { useState } from "react";
-import TextInput from "./TextInput";
-import NumberInput from "./NumberInput";
-import TimeInput from "./TimeInput";
-import Select from "./Select";
+import TextInput from "src/components/TextInput";
+import NumberInput from "src/components/NumberInput";
+import TimeInput from "src/components/TimeInput";
+import Select from "src/components/Select";
 import {
   DEFAULT_AC_STATUS,
   DEFAULT_AC_FAN,
@@ -30,7 +30,7 @@ import {
   DEFAULT_STOP_TIME,
   DEFAULT_TIMER_ENABLED,
   DEFAULT_WATER_TEMP,
-} from "../constants";
+} from "src/constants";
 
 // Form for creating a new smart home device. Adjusts based on the type selected
 export default function NewDeviceForm({
@@ -40,7 +40,7 @@ export default function NewDeviceForm({
   // Function for verifying that the new ID is unique. Recieves the new
   // ID as its only argument.
   verifyId,
-  // Whether or not to disabled the save button.
+  // Whether or not to disable the save button.
   disabled,
 }) {
   const [id, setId] = useState("");
@@ -205,6 +205,7 @@ export default function NewDeviceForm({
       </label>{" "}
       <label>
         <Select
+          data-testid="type-select"
           label="Device type: "
           options={[
             { label: "", value: "" },
