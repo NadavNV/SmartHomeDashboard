@@ -16,10 +16,10 @@ RUN npm install -g npm@11.4.2
 RUN npm ci
 
 # Copy source code
-COPY /src /src
-COPY /src/components /src/components
-COPY /src/constants /src/constants
-COPY /src/services /src/services
+COPY src/ src/
+COPY src/components/ src/components/
+COPY src/constants/ src/constants/
+COPY src/services/ src/services/
 COPY *.html .
 COPY *.js .
 
