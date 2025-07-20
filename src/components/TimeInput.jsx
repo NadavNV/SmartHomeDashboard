@@ -12,6 +12,8 @@ export default function TimeInput({
   onSave,
   // Whether or not to disable interactivity
   disabled,
+  // Label for this input
+  label,
 }) {
   // Whether or not the component is in editing mode
   const [editing, setEditing] = useState(false);
@@ -49,22 +51,29 @@ export default function TimeInput({
 
   return (
     <>
-      {editing && (
-        <input
-          ref={inputRef}
-          disabled={disabled}
-          type="text"
-          defaultValue={initValue}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleButtonClick();
-            }
-          }}
-        />
-      )}
-      {!editing &&
-        (inputRef.current === null ? initValue : inputRef.current.value)}{" "}
-      <button disabled={disabled} onClick={handleButtonClick}>
+      <label>
+        {label}
+        {editing && (
+          <input
+            ref={inputRef}
+            disabled={disabled}
+            type="text"
+            defaultValue={initValue}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleButtonClick();
+              }
+            }}
+          />
+        )}
+        {!editing &&
+          (inputRef.current === null ? initValue : inputRef.current.value)}{" "}
+      </label>
+      <button
+        disabled={disabled}
+        onClick={handleButtonClick}
+        aria-label={`${editing ? "Save" : "Edit"} ${label}`}
+      >
         {editing ? "Save" : "Edit"}
       </button>
     </>

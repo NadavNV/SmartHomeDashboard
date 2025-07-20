@@ -20,6 +20,7 @@ export default function Select({
         disabled={disabled}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        aria-label={`Select ${label}`}
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>

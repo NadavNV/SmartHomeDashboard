@@ -11,7 +11,7 @@ vi.mock("../src/constants", () => ({
 
 describe("TimeInput component", () => {
   const initValue = "12:00";
-  const setup = (props = {}) => {
+  const setup = (props = { label: "test" }) => {
     const onSave = vi.fn();
     render(<TimeInput initValue={initValue} onSave={onSave} {...props} />);
     return { onSave };
@@ -23,36 +23,36 @@ describe("TimeInput component", () => {
 
   it("displays initial value and Edit button", () => {
     setup();
-    expect(screen.getByText(initValue)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(initValue))).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("switches to input mode when Edit is clicked", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
   });
 
   it("saves valid input and exits editing mode", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "23:59" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(onSave).toHaveBeenCalledWith("23:59");
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("alerts and stays in edit mode on invalid input", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "99:99" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(global.alert).toHaveBeenCalledWith("Must enter a valid 24h time");
     expect(onSave).not.toHaveBeenCalled();
@@ -61,7 +61,7 @@ describe("TimeInput component", () => {
 
   it("focuses input when entering editing mode", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     const input = screen.getByRole("textbox");
     expect(document.activeElement).toBe(input);
   });
@@ -75,7 +75,7 @@ describe("TimeInput component", () => {
 
   it("pressing Enter triggers save if input is valid", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "08:30" } });

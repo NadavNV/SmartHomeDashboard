@@ -20,15 +20,17 @@ export default function DeviceOptions({
   onSave,
   // Whether or not to disabled input fields
   disabled,
+  // The ID of the device these options belong to
+  device_id,
 }) {
   switch (type) {
     case "water_heater":
       return (
-        <ul>
+        <ul data-testid={device_id + "-options"}>
           <li>Temperature: {parameters.temperature}</li>
           <li>
-            Target temperature:{" "}
             <NumberInput
+              label="Target temperature: "
               initValue={parameters.target_temperature}
               min={MIN_WATER_TEMP}
               max={MAX_WATER_TEMP}
@@ -63,9 +65,9 @@ export default function DeviceOptions({
                   });
                 }}
               />
-            </label>
-            {" Start time: "}
+            </label>{" "}
             <TimeInput
+              label="Start time: "
               initValue={parameters.scheduled_on}
               onSave={(newTime) => {
                 onSave({
@@ -73,9 +75,9 @@ export default function DeviceOptions({
                 });
               }}
               disabled={disabled}
-            />
-            {" Stop time: "}
+            />{" "}
             <TimeInput
+              label="Stop time: "
               initValue={parameters.scheduled_off}
               onSave={(newTime) => {
                 onSave({
@@ -92,8 +94,8 @@ export default function DeviceOptions({
         <ul>
           {parameters.is_dimmable && (
             <li>
-              Brightness:{" "}
               <NumberInput
+                label="Brightness: "
                 initValue={parameters.brightness}
                 min={MIN_BRIGHTNESS}
                 max={MAX_BRIGHTNESS}
@@ -134,8 +136,8 @@ export default function DeviceOptions({
         <ul>
           <li>
             <label>
-              Temperature:{" "}
               <NumberInput
+                label="Temperature: "
                 initValue={parameters.temperature}
                 min={MIN_AC_TEMP}
                 max={MAX_AC_TEMP}

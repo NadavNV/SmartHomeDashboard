@@ -172,95 +172,85 @@ export default function NewDeviceForm({
   }
 
   return (
-    <div>
-      <label>
-        Device ID:{" "}
-        <TextInput
-          initValue={id}
-          onSave={(newId) => {
-            setId(newId);
-          }}
-          disabled={false}
-        />
-      </label>{" "}
-      <label>
-        Device name:{" "}
-        <TextInput
-          initValue={name}
-          onSave={(newName) => {
-            setName(newName);
-          }}
-          disabled={false}
-        />
-      </label>{" "}
-      <label>
-        Room:{" "}
-        <TextInput
-          initValue={room}
-          onSave={(newRoom) => {
-            setRoom(newRoom);
-          }}
-          disabled={false}
-        />
-      </label>{" "}
-      <label>
-        <Select
-          data-testid="type-select"
-          label="Device type: "
-          options={[
-            { label: "", value: "" },
-            { label: "Water heater", value: "water_heater" },
-            { label: "Light", value: "light" },
-            { label: "Air conditioner", value: "air_conditioner" },
-            { label: "Door lock", value: "door_lock" },
-            { label: "Curtain", value: "curtain" },
-          ]}
-          value={type}
-          onChange={(newType) => {
-            setType(newType);
-            // Set the status based on the selected type
-            switch (newType) {
-              case "curtain":
-                setStatus(DEFAULT_CURTAIN_STATUS);
-                break;
-              case "door_lock":
-                setStatus(DEFAULT_LOCK_STATUS);
-                break;
-              case "water_heater":
-                setStatus(DEFAULT_WATER_HEATER_STATUS);
-                break;
-              case "air_conditioner":
-                setStatus(DEFAULT_AC_STATUS);
-                break;
-              case "light":
-                setStatus(DEFAULT_LIGHT_STATUS);
-                break;
-              default:
-                setStatus("off");
-                break;
-            }
-          }}
-          disabled={false}
-        />
-      </label>{" "}
+    <div aria-label="New device form">
+      <TextInput
+        label="Device ID: "
+        initValue={id}
+        onSave={(newId) => {
+          setId(newId);
+        }}
+        disabled={false}
+      />{" "}
+      <TextInput
+        label="Device name: "
+        initValue={name}
+        onSave={(newName) => {
+          setName(newName);
+        }}
+        disabled={false}
+      />{" "}
+      <TextInput
+        label="Room: "
+        initValue={room}
+        onSave={(newRoom) => {
+          setRoom(newRoom);
+        }}
+        disabled={false}
+      />{" "}
+      <Select
+        data-testid="type-select"
+        label="Device type: "
+        options={[
+          { label: "", value: "" },
+          { label: "Water heater", value: "water_heater" },
+          { label: "Light", value: "light" },
+          { label: "Air conditioner", value: "air_conditioner" },
+          { label: "Door lock", value: "door_lock" },
+          { label: "Curtain", value: "curtain" },
+        ]}
+        value={type}
+        onChange={(newType) => {
+          setType(newType);
+          // Set the status based on the selected type
+          switch (newType) {
+            case "curtain":
+              setStatus(DEFAULT_CURTAIN_STATUS);
+              break;
+            case "door_lock":
+              setStatus(DEFAULT_LOCK_STATUS);
+              break;
+            case "water_heater":
+              setStatus(DEFAULT_WATER_HEATER_STATUS);
+              break;
+            case "air_conditioner":
+              setStatus(DEFAULT_AC_STATUS);
+              break;
+            case "light":
+              setStatus(DEFAULT_LIGHT_STATUS);
+              break;
+            default:
+              setStatus("off");
+              break;
+          }
+        }}
+        disabled={false}
+      />{" "}
       {type === "water_heater" && (
         <ul>
           <li>
-            <label>
-              Target temperature:{" "}
-              <NumberInput
-                initValue={DEFAULT_WATER_TEMP}
-                min={MIN_WATER_TEMP}
-                max={MAX_WATER_TEMP}
-                onSave={(newTemperature) => {
-                  setParameters({
-                    ...parameters,
-                    target_temperature: newTemperature,
-                  });
-                }}
-                disabled={false}
-              />
-            </label>
+            <NumberInput
+              label="Target temperature: "
+              initValue={DEFAULT_WATER_TEMP}
+              min={MIN_WATER_TEMP}
+              max={MAX_WATER_TEMP}
+              onSave={(newTemperature) => {
+                setParameters({
+                  ...parameters,
+                  target_temperature: newTemperature,
+                });
+              }}
+              disabled={false}
+            />
           </li>
           <li>
             <label>
@@ -277,9 +267,9 @@ export default function NewDeviceForm({
                   });
                 }}
               />
-            </label>
-            {" Start time: "}
+            </label>{" "}
             <TimeInput
+              label="Start time: "
               initValue={parameters.scheduled_on ?? DEFAULT_START_TIME}
               onSave={(newTime) => {
                 setParameters({
@@ -288,9 +278,9 @@ export default function NewDeviceForm({
                 });
               }}
               disabled={!(parameters.timer_enabled ?? DEFAULT_TIMER_ENABLED)}
-            />
-            {" Stop time: "}
+            />{" "}
             <TimeInput
+              label="Stop time: "
               initValue={parameters.scheduled_off ?? DEFAULT_STOP_TIME}
               onSave={(newTime) => {
                 setParameters({
@@ -352,22 +342,19 @@ export default function NewDeviceForm({
               />
             </label>
             {(parameters.is_dimmable ?? DEFAULT_DIMMABLE) && (
-              <label>
-                {" "}
-                Brightness:{" "}
-                <NumberInput
-                  initValue={DEFAULT_BRIGHTNESS}
-                  min={MIN_BRIGHTNESS}
-                  max={MAX_BRIGHTNESS}
-                  onSave={(newBrightness) => {
-                    setParameters({
-                      ...parameters,
-                      brightness: newBrightness,
-                    });
-                  }}
-                  disabled={false}
-                />
-              </label>
+              <NumberInput
+                label="Brightness: "
+                initValue={DEFAULT_BRIGHTNESS}
+                min={MIN_BRIGHTNESS}
+                max={MAX_BRIGHTNESS}
+                onSave={(newBrightness) => {
+                  setParameters({
+                    ...parameters,
+                    brightness: newBrightness,
+                  });
+                }}
+                disabled={false}
+              />
             )}
           </li>
         </ul>
@@ -375,21 +362,19 @@ export default function NewDeviceForm({
       {type === "air_conditioner" && (
         <ul>
           <li>
-            <label>
-              Temperature:
-              <NumberInput
-                initValue={DEFAULT_AC_TEMP}
-                min={MIN_AC_TEMP}
-                max={MAX_AC_TEMP}
-                onSave={(newTemperature) => {
-                  setParameters({
-                    ...parameters,
-                    temperature: newTemperature,
-                  });
-                }}
-                disabled={false}
-              />
-            </label>
+            <NumberInput
+              label="Temperature: "
+              initValue={DEFAULT_AC_TEMP}
+              min={MIN_AC_TEMP}
+              max={MAX_AC_TEMP}
+              onSave={(newTemperature) => {
+                setParameters({
+                  ...parameters,
+                  temperature: newTemperature,
+                });
+              }}
+              disabled={false}
+            />
           </li>
           <li>
             <Select

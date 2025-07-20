@@ -2,8 +2,12 @@ import { vi } from "vitest";
 // === Mock external dependencies ===
 vi.mock("src/services/queries");
 vi.mock("src/services/mutations");
-vi.mock("src/components/NewDeviceForm");
-vi.mock("src/components/DeviceGroup");
+vi.mock("src/components/NewDeviceForm", () =>
+  import("__mocks__/src/components/NewDeviceForm")
+);
+vi.mock("src/components/DeviceGroup", () =>
+  import("__mocks__/src/components/DeviceGroup")
+);
 vi.mock("@tanstack/react-query", () => ({
   useIsFetching: vi.fn(),
   useIsMutating: vi.fn(),
@@ -37,8 +41,7 @@ const mockDevices = [
   },
 ];
 
-const mockInvalidateQueries = vi.fn().mockImplementation(async (...args) => {
-  console.log("invalidateQueries called with", args);
+const mockInvalidateQueries = vi.fn().mockImplementation(async () => {
   return Promise.resolve();
 });
 
@@ -70,6 +73,7 @@ it("shows data and allows adding a device", () => {
   expect(screen.getByText(/Data retrieved at/)).toBeInTheDocument();
   expect(screen.getAllByTestId("mock-device-group")).toHaveLength(2);
 
+  expect(screen.queryByTestId("mock-new-device-form")).not.toBeInTheDocument();
   fireEvent.click(screen.getByText("Add device"));
   expect(screen.getByTestId("mock-new-device-form")).toBeInTheDocument();
 });

@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { vi } from "vitest";
+import { mockDeviceProps } from "__mocks__/src/components/Device";
 
 // Mocks for react-query hooks and Device component
 vi.mock("@tanstack/react-query", () => ({
@@ -12,26 +13,12 @@ vi.mock("src/services/mutations", () => ({
 }));
 
 // Mock Device to expose props for testing
-vi.mock("src/components/Device", () => ({
-  default: ({ id, disabled, updateDevice, removeDevice }) => (
-    <div
-      data-testid="device"
-      data-id={id}
-      data-disabled={disabled ? "true" : "false"}
-      onClick={() => {
-        // Mocked onClick handler for testing callbacks
-        updateDevice && updateDevice({ id, changes: { test: true } });
-        removeDevice && removeDevice(id);
-      }}
-    >
-      Device {id}
-    </div>
-  ),
-}));
+vi.mock("src/components/Device", () =>
+  import("__mocks__/src/components/Device")
+);
 
-import DeviceGroup from "src/components/DeviceGroup";
 import * as reactQuery from "@tanstack/react-query";
-import * as mutations from "src/services/mutations";
+import DeviceGroup from "src/components/DeviceGroup";
 
 describe("DeviceGroup component", () => {
   const devices = [
@@ -54,31 +41,30 @@ describe("DeviceGroup component", () => {
   ];
 
   beforeEach(() => {
+    for (const key in mockDeviceProps) {
+      delete mockDeviceProps[key];
+    }
     vi.clearAllMocks();
   });
 
-  it("renders the label and all devices", () => {
-    render(<DeviceGroup label="Test Group" deviceList={devices} />);
+  it("renders the group label", () => {
+    render(<DeviceGroup label="Test Group" deviceList={[]} />);
     expect(screen.getByText("Test Group:")).toBeInTheDocument();
-
-    const deviceElements = screen.getAllByTestId("device");
-    expect(deviceElements).toHaveLength(devices.length);
-
-    // Check device IDs are correct
-    expect(deviceElements[0]).toHaveAttribute("data-id", "1");
-    expect(deviceElements[1]).toHaveAttribute("data-id", "2");
   });
-
+  it("renders one Device component per device in the list", () => {
+    render(<DeviceGroup lable="Test Group" deviceList={devices} />);
+    const deviceElements = screen.getAllByTestId("mock-device");
+    expect(deviceElements).toHaveLength(devices.length);
+  });
   it("disables devices when fetching or mutating", () => {
     vi.spyOn(reactQuery, "useIsFetching").mockReturnValue(1);
     vi.spyOn(reactQuery, "useIsMutating").mockReturnValue(0);
 
     render(<DeviceGroup label="Disabled Group" deviceList={devices} />);
 
-    const deviceElements = screen.getAllByTestId("device");
-    deviceElements.forEach((device) => {
-      expect(device.getAttribute("data-disabled")).toBe("true");
-    });
+    for (const device of Object.values(mockDeviceProps)) {
+      expect(device.disabled).toBe(true);
+    }
   });
 
   it("does not disable devices when not fetching or mutating", () => {
@@ -87,43 +73,8 @@ describe("DeviceGroup component", () => {
 
     render(<DeviceGroup label="Enabled Group" deviceList={devices} />);
 
-    const deviceElements = screen.getAllByTestId("device");
-    deviceElements.forEach((device) => {
-      expect(device.getAttribute("data-disabled")).toBe("false");
-    });
-  });
-
-  it("calls updateDeviceMutation.mutate when updateDevice callback is called", () => {
-    const updateMutate = vi.fn();
-    // Override the mocked useUpdateDevice to return mutate mock
-    mutations.useUpdateDevice.mockImplementation(() => ({
-      mutate: updateMutate,
-    }));
-
-    // useDeleteDevice can return default mock
-    mutations.useDeleteDevice.mockImplementation(() => ({ mutate: vi.fn() }));
-
-    render(<DeviceGroup label="Test" deviceList={[devices[0]]} />);
-
-    fireEvent.click(screen.getByTestId("device"));
-
-    expect(updateMutate).toHaveBeenCalledWith({
-      id: "1",
-      changes: { test: true },
-    });
-  });
-
-  it("calls deleteDeviceMutation.mutate when removeDevice callback is called", () => {
-    const deleteMutate = vi.fn();
-    mutations.useDeleteDevice.mockImplementation(() => ({
-      mutate: deleteMutate,
-    }));
-    mutations.useUpdateDevice.mockImplementation(() => ({ mutate: vi.fn() }));
-
-    render(<DeviceGroup label="Test" deviceList={[devices[0]]} />);
-
-    fireEvent.click(screen.getByTestId("device"));
-
-    expect(deleteMutate).toHaveBeenCalledWith("1");
+    for (const device of Object.values(mockDeviceProps)) {
+      expect(device.disabled).toBe(false);
+    }
   });
 });

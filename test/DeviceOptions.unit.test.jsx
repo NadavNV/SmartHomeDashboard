@@ -1,9 +1,15 @@
 import { expect, vi } from "vitest";
 // Mock components
-vi.mock("src/components/NumberInput");
-vi.mock("src/components/TimeInput");
-vi.mock("src/components/Select");
-vi.mock("src/constants");
+vi.mock("src/components/NumberInput", () =>
+  import("__mocks__/src/components/NumberInput")
+);
+vi.mock("src/components/TimeInput", () =>
+  import("__mocks__/src/components/TimeInput")
+);
+vi.mock("src/components/Select", () =>
+  import("__mocks__/src/components/Select")
+);
+vi.mock("src/constants", () => import("__mocks__/src/constants"));
 import { render, screen } from "@testing-library/react";
 import DeviceOptions from "src/components/DeviceOptions";
 
@@ -90,9 +96,7 @@ describe("Test DeviceOptions component", () => {
         />
       );
 
-      expect(screen.getByText(/brightness/i)).toBeInTheDocument();
       expect(screen.getByTestId("mock-number-input")).toBeInTheDocument();
-      expect(screen.getByText(/color/i)).toBeInTheDocument();
       expect(screen.getByTestId("color-picker")).toBeInTheDocument();
     });
     it("doesn't render the brightness if not dimmable", () => {
@@ -110,7 +114,6 @@ describe("Test DeviceOptions component", () => {
         />
       );
 
-      expect(screen.queryByText(/brightness/i)).not.toBeInTheDocument();
       expect(screen.queryByTestId("mock-number-input")).not.toBeInTheDocument();
     });
     it("doesn't render the color if not dynamic color", () => {
@@ -128,7 +131,6 @@ describe("Test DeviceOptions component", () => {
         />
       );
 
-      expect(screen.queryByText(/color/i)).not.toBeInTheDocument();
       expect(screen.queryByTestId("color-picker")).not.toBeInTheDocument();
     });
   });
@@ -147,7 +149,6 @@ describe("Test DeviceOptions component", () => {
           disabled={false}
         />
       );
-      expect(screen.getByText(/temperature/i)).toBeInTheDocument();
       expect(screen.getByTestId("mock-number-input")).toBeInTheDocument();
       expect(screen.getAllByTestId("mock-select")).toHaveLength(3);
     });
@@ -165,8 +166,6 @@ describe("Test DeviceOptions component", () => {
           disabled={false}
         />
       );
-
-      expect(screen.getByText(/auto-lock/i)).toBeInTheDocument();
       expect(screen.getByRole("checkbox")).toBeInTheDocument();
       expect(screen.getByText(/battery/i)).toBeInTheDocument();
     });
@@ -183,7 +182,6 @@ describe("Test DeviceOptions component", () => {
           disabled={false}
         />
       );
-
       expect(screen.getByText(/position/i)).toBeInTheDocument();
     });
   });
@@ -197,7 +195,6 @@ describe("Test DeviceOptions component", () => {
           disabled={false}
         />
       );
-
       expect(screen.getByText(/unknown device type/i)).toBeInTheDocument();
     });
   });

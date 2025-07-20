@@ -84,6 +84,7 @@ export default function Device({
   return (
     <div id={id}>
       <TextInput
+        label="Name: "
         initValue={name}
         onSave={(newName) => {
           updateDevice({
@@ -97,24 +98,28 @@ export default function Device({
       />{" "}
       {statusInput}
       {" - "}
-      <label>
-        Room:{" "}
-        <TextInput
-          initValue={room}
-          onSave={(newRoom) => {
-            updateDevice({
-              id: id,
-              changes: {
-                room: newRoom,
-              },
-            });
-          }}
-        />
-      </label>{" "}
-      <button disabled={disabled} onClick={handleRemoveDevice}>
+      <TextInput
+        label="Room: "
+        initValue={room}
+        onSave={(newRoom) => {
+          updateDevice({
+            id: id,
+            changes: {
+              room: newRoom,
+            },
+          });
+        }}
+        disabled={disabled}
+      />{" "}
+      <button
+        aria-label={"Remove device " + id}
+        disabled={disabled}
+        onClick={handleRemoveDevice}
+      >
         Remove
       </button>
       <DeviceOptions
+        device_id={id}
         type={type}
         parameters={{ ...parameters }}
         onSave={(newParameters) => {

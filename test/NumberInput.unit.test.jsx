@@ -19,35 +19,35 @@ describe("NumberInput component", () => {
   it("displays initial value and Edit button", () => {
     setup();
     expect(screen.getByText(initValue)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("switches to input mode when Edit is clicked", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     expect(screen.getByRole("spinbutton")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
   });
 
   it("saves valid input and exits editing mode", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: 59 } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(onSave).toHaveBeenCalledWith("59");
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("alerts and stays in edit mode on invalid input - only max", () => {
     const { onSave } = setup({ max: 50 });
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: 99 } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(global.alert).toHaveBeenCalledWith(
       "Must enter a number lower than 50"
@@ -58,11 +58,11 @@ describe("NumberInput component", () => {
 
   it("alerts and stays in edit mode on invalid input - only min", () => {
     const { onSave } = setup({ min: 50 });
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: 49 } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(global.alert).toHaveBeenCalledWith(
       "Must enter a number greater than 50"
@@ -73,11 +73,11 @@ describe("NumberInput component", () => {
 
   it("alerts and stays in edit mode on invalid input - min and max", () => {
     const { onSave } = setup({ min: 30, max: 50 });
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: 51 } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(global.alert).toHaveBeenCalledWith(
       "Must enter a nunmber between 30 and 50"
@@ -88,7 +88,7 @@ describe("NumberInput component", () => {
 
   it("focuses input when entering editing mode", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     const input = screen.getByRole("spinbutton");
     expect(document.activeElement).toBe(input);
   });
@@ -102,7 +102,7 @@ describe("NumberInput component", () => {
 
   it("pressing Enter triggers save if input is valid", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("spinbutton");
     fireEvent.change(input, { target: { value: 8 } });

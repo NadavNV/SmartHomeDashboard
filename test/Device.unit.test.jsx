@@ -1,8 +1,12 @@
 import { render, fireEvent, screen } from "@testing-library/react";
 import { vi } from "vitest";
 // Mock componentss
-vi.mock("src/components/DeviceOptions");
-vi.mock("src/components/TextInput");
+vi.mock("src/components/DeviceOptions", () =>
+  import("__mocks__/src/components/DeviceOptions")
+);
+vi.mock("src/components/TextInput", () =>
+  import("__mocks__/src/components/TextInput")
+);
 import Device from "src/components/Device";
 
 describe("Device component", () => {

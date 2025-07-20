@@ -16,31 +16,31 @@ describe("TextInput component", () => {
   it("displays initial value and Edit button", () => {
     setup();
     expect(screen.getByText(initValue)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("switches to input mode when Edit is clicked", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     expect(screen.getByRole("textbox")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument();
   });
 
   it("saves valid input and exits editing mode", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "Steve" } });
-    fireEvent.click(screen.getByRole("button", { name: "Save" }));
+    fireEvent.click(screen.getByRole("button", { name: /save/i }));
 
     expect(onSave).toHaveBeenCalledWith("Steve");
-    expect(screen.getByRole("button", { name: "Edit" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /edit/i })).toBeInTheDocument();
   });
 
   it("focuses input when entering editing mode", () => {
     setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
     const input = screen.getByRole("textbox");
     expect(document.activeElement).toBe(input);
   });
@@ -54,7 +54,7 @@ describe("TextInput component", () => {
 
   it("pressing Enter triggers save if input is valid", () => {
     const { onSave } = setup();
-    fireEvent.click(screen.getByRole("button", { name: "Edit" }));
+    fireEvent.click(screen.getByRole("button", { name: /edit/i }));
 
     const input = screen.getByRole("textbox");
     fireEvent.change(input, { target: { value: "08:30" } });
