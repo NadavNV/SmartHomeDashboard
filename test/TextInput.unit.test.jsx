@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import TextInput from "src/components/TextInput";
 
-describe("TextInput component", () => {
+describe("Unit test TextInput component", () => {
   const initValue = "David";
   const setup = (props = {}) => {
     const onSave = vi.fn();

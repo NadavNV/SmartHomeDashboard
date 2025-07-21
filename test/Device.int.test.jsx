@@ -2,7 +2,7 @@ import { render, fireEvent, screen } from "@testing-library/react";
 import { expect, vi } from "vitest";
 import Device from "src/components/Device";
 
-describe("Device component", () => {
+describe("Integration test Device component", () => {
   const updateDevice = vi.fn();
   const removeDevice = vi.fn();
 

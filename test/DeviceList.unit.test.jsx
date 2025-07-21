@@ -45,74 +45,78 @@ const mockInvalidateQueries = vi.fn().mockImplementation(async () => {
   return Promise.resolve();
 });
 
-beforeEach(() => {
-  vi.clearAllMocks();
-  useQueryClient.mockReturnValue({
-    invalidateQueries: mockInvalidateQueries,
-  });
-  useCreateDevice.mockReturnValue({ mutate: vi.fn() });
-  useIsFetching.mockReturnValue(0);
-  useIsMutating.mockReturnValue(0);
-});
-
-it("shows loading when fetching", () => {
-  useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
-  useDevices.mockReturnValue({ data: mockDevices, isError: false });
-  useIsFetching.mockReturnValue(1);
-  useIsMutating.mockReturnValue(0);
-
-  render(<DeviceList />);
-  expect(screen.getByText(/Loading/)).toBeInTheDocument();
-});
-
-it("shows data and allows adding a device", () => {
-  useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
-  useDevices.mockReturnValue({ data: mockDevices, isError: false });
-
-  render(<DeviceList />);
-  expect(screen.getByText(/Data retrieved at/)).toBeInTheDocument();
-  expect(screen.getAllByTestId("mock-device-group")).toHaveLength(2);
-
-  expect(screen.queryByTestId("mock-new-device-form")).not.toBeInTheDocument();
-  fireEvent.click(screen.getByText("Add device"));
-  expect(screen.getByTestId("mock-new-device-form")).toBeInTheDocument();
-});
-
-test("reload button invalidates device queries", async () => {
-  useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
-  useDevices.mockReturnValue({ data: mockDevices, isError: false });
-
-  render(<DeviceList />);
-
-  fireEvent.click(screen.getByText("Reload"));
-
-  // Flush immediate async operations, not long-running timers
-  await act(async () => {
-    vi.advanceTimersByTime(0);
-    await Promise.resolve();
+describe("Integration test DeviceList component", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    useQueryClient.mockReturnValue({
+      invalidateQueries: mockInvalidateQueries,
+    });
+    useCreateDevice.mockReturnValue({ mutate: vi.fn() });
+    useIsFetching.mockReturnValue(0);
+    useIsMutating.mockReturnValue(0);
   });
 
-  expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+  it("shows loading when fetching", () => {
+    useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
+    useDevices.mockReturnValue({ data: mockDevices, isError: false });
+    useIsFetching.mockReturnValue(1);
+    useIsMutating.mockReturnValue(0);
 
-  const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
-  expect(calls).toContainEqual(["device_ids"]);
-  expect(calls).toContainEqual(["device"]);
-});
-
-test("auto reload triggers after 60 seconds of no user activity", async () => {
-  useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
-  useDevices.mockReturnValue({ data: mockDevices, isError: false });
-
-  render(<DeviceList />);
-
-  // Advance fake timers by 60 seconds
-  await act(async () => {
-    await vi.advanceTimersByTimeAsync(60000);
+    render(<DeviceList />);
+    expect(screen.getByText(/Loading/)).toBeInTheDocument();
   });
 
-  expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+  it("shows data and allows adding a device", () => {
+    useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
+    useDevices.mockReturnValue({ data: mockDevices, isError: false });
 
-  const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
-  expect(calls).toContainEqual(["device_ids"]);
-  expect(calls).toContainEqual(["device"]);
+    render(<DeviceList />);
+    expect(screen.getByText(/Data retrieved at/)).toBeInTheDocument();
+    expect(screen.getAllByTestId("mock-device-group")).toHaveLength(2);
+
+    expect(
+      screen.queryByTestId("mock-new-device-form")
+    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText("Add device"));
+    expect(screen.getByTestId("mock-new-device-form")).toBeInTheDocument();
+  });
+
+  test("reload button invalidates device queries", async () => {
+    useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
+    useDevices.mockReturnValue({ data: mockDevices, isError: false });
+
+    render(<DeviceList />);
+
+    fireEvent.click(screen.getByText("Reload"));
+
+    // Flush immediate async operations, not long-running timers
+    await act(async () => {
+      vi.advanceTimersByTime(0);
+      await Promise.resolve();
+    });
+
+    expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+
+    const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
+    expect(calls).toContainEqual(["device_ids"]);
+    expect(calls).toContainEqual(["device"]);
+  });
+
+  test("auto reload triggers after 60 seconds of no user activity", async () => {
+    useDeviceIds.mockReturnValue({ data: mockDeviceIds, isError: false });
+    useDevices.mockReturnValue({ data: mockDevices, isError: false });
+
+    render(<DeviceList />);
+
+    // Advance fake timers by 60 seconds
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(60000);
+    });
+
+    expect(mockInvalidateQueries).toHaveBeenCalledTimes(2);
+
+    const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
+    expect(calls).toContainEqual(["device_ids"]);
+    expect(calls).toContainEqual(["device"]);
+  });
 });

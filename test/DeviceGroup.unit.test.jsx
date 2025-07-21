@@ -20,7 +20,7 @@ vi.mock("src/components/Device", () =>
 import * as reactQuery from "@tanstack/react-query";
 import DeviceGroup from "src/components/DeviceGroup";
 
-describe("DeviceGroup component", () => {
+describe("Unit test DeviceGroup component", () => {
   const devices = [
     {
       id: "1",

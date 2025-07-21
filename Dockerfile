@@ -11,8 +11,7 @@ RUN mkdir /src/services
 
 # Install dependencies
 COPY package*.json .
-# Update npm
-RUN npm install -g npm@11.4.2
+
 RUN npm ci
 
 # Copy source code
@@ -32,8 +31,6 @@ RUN npm run build
 
 # Stage 2 - Building nginx
 FROM nginx:mainline-alpine AS prod
-
-# RUN apk add --no-cache gettext
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 

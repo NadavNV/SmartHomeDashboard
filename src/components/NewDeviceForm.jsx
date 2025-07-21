@@ -61,7 +61,7 @@ export default function NewDeviceForm({
     switch (type) {
       case "water_heater":
         allowedKeys = [
-          "temeprature",
+          "temperature",
           "target_temperature",
           "timer_enabled",
           "scheduled_on",
@@ -76,13 +76,11 @@ export default function NewDeviceForm({
         if (newParameters.timer_enabled === undefined) {
           newParameters.timer_enabled = DEFAULT_TIMER_ENABLED;
         }
-        if (newParameters.timer_enabled) {
-          if (newParameters.scheduled_on === undefined) {
-            newParameters.scheduled_on = DEFAULT_START_TIME;
-          }
-          if (newParameters.scheduled_off === undefined) {
-            newParameters.scheduled_off = DEFAULT_STOP_TIME;
-          }
+        if (newParameters.scheduled_on === undefined) {
+          newParameters.scheduled_on = DEFAULT_START_TIME;
+        }
+        if (newParameters.scheduled_off === undefined) {
+          newParameters.scheduled_off = DEFAULT_STOP_TIME;
         }
         break;
       case "light":
@@ -109,7 +107,7 @@ export default function NewDeviceForm({
         if (newParameters.auto_lock_enabled === undefined) {
           newParameters.auto_lock_enabled = DEFAULT_AUTO_LOCK_ENABLED;
         }
-        if (newParameters.auto_lock_enabled) {
+        if (newParameters.battery_level === undefined) {
           newParameters.battery_level = DEFAULT_BATTERY;
         }
         break;
@@ -455,7 +453,11 @@ export default function NewDeviceForm({
         </ul>
       )}
       <br />
-      <button onClick={handleSubmit} disabled={disabled}>
+      <button
+        aria-label="Submit form button"
+        onClick={handleSubmit}
+        disabled={disabled}
+      >
         Submit
       </button>
     </div>

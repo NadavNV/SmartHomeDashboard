@@ -9,7 +9,7 @@ vi.mock("src/components/TextInput", () =>
 );
 import Device from "src/components/Device";
 
-describe("Device component", () => {
+describe("Unit test Device component", () => {
   const updateDevice = vi.fn();
   const removeDevice = vi.fn();
 

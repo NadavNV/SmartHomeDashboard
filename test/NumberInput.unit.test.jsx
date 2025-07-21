@@ -4,7 +4,7 @@ import NumberInput from "src/components/NumberInput";
 // Needed to mock alert()
 global.alert = vi.fn();
 
-describe("NumberInput component", () => {
+describe("Unit test NumberInput component", () => {
   const initValue = 12;
   const setup = (props = {}) => {
     const onSave = vi.fn();

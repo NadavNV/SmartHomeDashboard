@@ -2,7 +2,7 @@ import { expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import DeviceOptions from "src/components/DeviceOptions";
 
-describe("Test DeviceOptions component", () => {
+describe("Integration test DeviceOptions component", () => {
   describe("for water heater devices", () => {
     it("disables inputs when disabled", () => {
       render(

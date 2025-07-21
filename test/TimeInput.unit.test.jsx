@@ -9,7 +9,7 @@ vi.mock("../src/constants", () => ({
   TIME_REGEX: /^([01]\d|2[0-3]):[0-5]\d$/, // 24h format HH:mm
 }));
 
-describe("TimeInput component", () => {
+describe("Unit test TimeInput component", () => {
   const initValue = "12:00";
   const setup = (props = { label: "test" }) => {
     const onSave = vi.fn();

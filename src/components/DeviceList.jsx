@@ -19,8 +19,10 @@ import { useCreateDevice } from "src/services/mutations";
 export default function DeviceList() {
   // Query to fetch all device IDs from the server
   const deviceIdsQuery = useDeviceIds();
+  console.log("Device ids seen in component:", deviceIdsQuery.data);
   // Query to fetch all device data based on their IDs
-  const devicesQuery = useDevices(deviceIdsQuery.data);
+  const deviceIds = deviceIdsQuery.data ?? [];
+  const devicesQuery = useDevices(deviceIds);
 
   // Whether or not to display the new device form
   const [showForm, setShowForm] = useState(false);
@@ -123,14 +125,21 @@ export default function DeviceList() {
 
   if (deviceIdsQuery.isError || devicesQuery.isError) {
     return (
-      <>
+      <div
+        style={{
+          display: "block",
+          marginLeft: "auto",
+          marginRight: "auto",
+          width: "fit-content",
+        }}
+      >
         <h1>Error loading data</h1>
         {deviceIdsQuery.isError && <p>{deviceIdsQuery.error.message}</p>}
         {devicesQuery.isError && <p>{devicesQuery.errors[0].message}</p>}
-      </>
+      </div>
     );
   }
-
+  console.log("devicesQuery:", devicesQuery);
   return (
     <div
       style={{

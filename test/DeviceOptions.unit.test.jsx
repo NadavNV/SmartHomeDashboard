@@ -13,7 +13,7 @@ vi.mock("src/constants", () => import("__mocks__/src/constants"));
 import { render, screen } from "@testing-library/react";
 import DeviceOptions from "src/components/DeviceOptions";
 
-describe("Test DeviceOptions component", () => {
+describe("Unit test DeviceOptions component", () => {
   describe("for water heater devices", () => {
     it("renders water heater options UI", () => {
       render(

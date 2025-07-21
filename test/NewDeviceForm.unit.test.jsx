@@ -21,7 +21,7 @@ global.alert = vi.fn();
 const mockAddDevice = vi.fn();
 const mockVerifyId = vi.fn();
 
-describe("Test NewDeviceForm", () => {
+describe("Unit test NewDeviceForm component", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

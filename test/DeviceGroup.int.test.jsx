@@ -14,7 +14,7 @@ vi.mock("src/services/mutations", () => ({
 import DeviceGroup from "src/components/DeviceGroup";
 import * as mutations from "src/services/mutations";
 
-describe("DeviceGroup component", () => {
+describe("Integration test DeviceGroup component", () => {
   const devices = [
     {
       id: "1",
