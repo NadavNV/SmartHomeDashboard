@@ -5,10 +5,7 @@ const axiosInstance = axios.create({
 });
 
 export const getDeviceIds = async () => {
-  const response = await axiosInstance.get("/api/ids");
-  console.log(`get("/api/ids") returned ${response}`);
-  console.log(`response data is ${response.data}`);
-  return response.data;
+  return (await axiosInstance.get("/api/ids")).data;
 };
 
 export const getDevice = async (id) => {

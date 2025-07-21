@@ -3,7 +3,6 @@ import { getDeviceIds, getDevice } from "./api";
 
 // Get the data on a list of devices based on their IDs, in parallel form.
 export function useDevices(ids) {
-  console.log(`useDevices called with ${ids}`);
   const normalizedIds = Array.isArray(ids)
     ? ids
     : ids === null || ids === undefined

@@ -45,8 +45,9 @@ const mockInvalidateQueries = vi.fn().mockImplementation(async () => {
   return Promise.resolve();
 });
 
-describe("Integration test DeviceList component", () => {
+describe("Unit test DeviceList component", () => {
   beforeEach(() => {
+    vi.clearAllTimers();
     vi.clearAllMocks();
     useQueryClient.mockReturnValue({
       invalidateQueries: mockInvalidateQueries,
@@ -118,5 +119,24 @@ describe("Integration test DeviceList component", () => {
     const calls = mockInvalidateQueries.mock.calls.map(([arg]) => arg.queryKey);
     expect(calls).toContainEqual(["device_ids"]);
     expect(calls).toContainEqual(["device"]);
+  });
+  test("timer resets on user actions", () => {
+    const clearTimeoutSpy = vi.spyOn(global, "clearTimeout");
+    const setTimeoutSpy = vi.spyOn(global, "setTimeout");
+
+    render(<DeviceList />);
+
+    // Initial setTimeout should be called once on mount (if no pending queries)
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(1);
+
+    // Simulate user mouse movement
+    fireEvent.mouseMove(window);
+    expect(clearTimeoutSpy).toHaveBeenCalledTimes(1);
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(2);
+
+    // Simulate key press
+    fireEvent.keyDown(window, { key: "a" });
+    expect(clearTimeoutSpy).toHaveBeenCalledTimes(2);
+    expect(setTimeoutSpy).toHaveBeenCalledTimes(3);
   });
 });

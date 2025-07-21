@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   useIsFetching,
   useIsMutating,
@@ -19,10 +19,8 @@ import { useCreateDevice } from "src/services/mutations";
 export default function DeviceList() {
   // Query to fetch all device IDs from the server
   const deviceIdsQuery = useDeviceIds();
-  console.log("Device ids seen in component:", deviceIdsQuery.data);
   // Query to fetch all device data based on their IDs
-  const deviceIds = deviceIdsQuery.data ?? [];
-  const devicesQuery = useDevices(deviceIds);
+  const devicesQuery = useDevices(deviceIdsQuery.data);
 
   // Whether or not to display the new device form
   const [showForm, setShowForm] = useState(false);
@@ -139,7 +137,6 @@ export default function DeviceList() {
       </div>
     );
   }
-  console.log("devicesQuery:", devicesQuery);
   return (
     <div
       style={{
@@ -167,6 +164,7 @@ export default function DeviceList() {
         {groupBy === "room" ? "Group by type" : "Group by room"}
       </button>{" "}
       <button
+        aria-label="Show add device form button"
         onClick={() => {
           if (!showForm) {
             setShowForm(true);
