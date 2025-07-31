@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import {
   useIsFetching,
   useIsMutating,
@@ -20,8 +20,7 @@ export default function DeviceList({ onLogout }) {
   // Query to fetch all device IDs from the server
   const deviceIdsQuery = useDeviceIds();
   // Query to fetch all device data based on their IDs
-  const deviceIds = deviceIdsQuery.data ?? [];
-  const devicesQuery = useDevices(deviceIds);
+  const devicesQuery = useDevices(deviceIdsQuery.data);
 
   // Whether or not to display the new device form
   const [showForm, setShowForm] = useState(false);
@@ -158,6 +157,7 @@ export default function DeviceList({ onLogout }) {
         {groupBy === "room" ? "Group by type" : "Group by room"}
       </button>{" "}
       <button
+        aria-label="Show add device form button"
         onClick={() => {
           if (!showForm) {
             setShowForm(true);
