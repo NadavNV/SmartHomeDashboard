@@ -16,10 +16,9 @@ import { useCreateDevice } from "src/services/mutations";
 // information or display a form for adding a new device.
 // Device information is automatically reacquired after one minute
 // without any user actions.
-export default function DeviceList() {
+export default function DeviceList({ onLogout }) {
   // Query to fetch all device IDs from the server
   const deviceIdsQuery = useDeviceIds();
-  console.log("Device ids seen in component:", deviceIdsQuery.data);
   // Query to fetch all device data based on their IDs
   const deviceIds = deviceIdsQuery.data ?? [];
   const devicesQuery = useDevices(deviceIds);
@@ -139,16 +138,8 @@ export default function DeviceList() {
       </div>
     );
   }
-  console.log("devicesQuery:", devicesQuery);
   return (
-    <div
-      style={{
-        display: "block",
-        marginLeft: "auto",
-        marginRight: "auto",
-        width: "fit-content",
-      }}
-    >
+    <div>
       {/* Status message */}
       {(isFetching > 0 || isMutating > 0) && <h1>Loading...</h1>}
       {isFetching === 0 && isMutating === 0 && (
@@ -175,7 +166,8 @@ export default function DeviceList() {
       >
         Add device
       </button>{" "}
-      <button onClick={handleReload}>Reload</button>
+      <button onClick={handleReload}>Reload</button>{" "}
+      <button onClick={onLogout}>Logout</button>
       <br />
       <br />
       {/* New device form */}

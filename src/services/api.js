@@ -4,11 +4,23 @@ const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "",
 });
 
+// Automatically include token if present
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+export const loginUser = async (username, password) => {
+  return (await axiosInstance.post("/login", { username, password })).data;
+};
+
+export const registerUser = async (username, password) => {
+  return (await axiosInstance.post("/register", { username, password })).data;
+};
+
 export const getDeviceIds = async () => {
-  const response = await axiosInstance.get("/api/ids");
-  console.log(`get("/api/ids") returned ${response}`);
-  console.log(`response data is ${response.data}`);
-  return response.data;
+  return (await axiosInstance.get("/api/ids")).data;
 };
 
 export const getDevice = async (id) => {

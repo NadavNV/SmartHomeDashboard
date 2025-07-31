@@ -64,9 +64,7 @@ const mockDevices = [
 ];
 
 mockAxiosInstance.get.mockImplementation((url) => {
-  console.log(`'get' called with ${url}`);
   if (url === "/api/ids") {
-    console.log(`Returning mock device ids ${mockDeviceIds}`);
     return Promise.resolve({ status: 200, data: mockDeviceIds });
   } else if (/^\/api\/devices\/[^/]+$/.test(url)) {
     const id = url.split("/").pop();
@@ -118,7 +116,6 @@ describe("Unit test DeviceList component", () => {
     renderWithQueryClient(<DeviceList />);
 
     await waitFor(() => {
-      console.log("waiting...");
       expect(screen.queryByText("Kitchen Light")).toBeInTheDocument();
       expect(screen.queryByText("Main Water Heater")).toBeInTheDocument();
     });
